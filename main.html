@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <title>Simple Geometry Test</title>
+  </head>
+
+  <style>
+  body {margin: 0;}
+  canvas {width: 100%; height: 100%;}
+  </style>
+
+  <body>
+    <!--include the three.js library-->
+   <script src="js/three.js"> </script>
+   <!--and the trackball code-->
+   <script src="js/OrbitControls.js"> </script>
+
+    <style>
+    			body {
+    				font-family: Monospace;
+    				background-color: #000;
+    				color: #fff;
+    				margin: 0px;
+    				overflow: hidden;
+    			}
+    			#info {
+    				position: absolute;
+    				top: 10px;
+    				width: 100%;
+    				text-align: center;
+    			}
+    </style>
+
+    <div id="info">
+      <p>This is the first example using threeJS<br>
+      left button to rotate the scene, scroll to zoom in/out</p>
+    </div>
+    <script>
+
+    //create the scene
+    var scene = new THREE.Scene( );
+    var ratio = window.innerWidth/window.innerHeight;
+    //create the perspective camera
+    //for parameters see https://threejs.org/docs/#api/cameras/PerspectiveCamera
+    var camera = new THREE.PerspectiveCamera(45,ratio,0.1,1000);
+
+    //set the camera position
+    camera.position.set(0,0,15);
+    // and the direction
+	  camera.lookAt(0,0,1);
+
+    //create the webgl renderer
+    var renderer = new THREE.WebGLRenderer( );
+
+    //set the size of the rendering window
+    renderer.setSize(window.innerWidth,window.innerHeight);
+
+    //add the renderer to the current document
+    document.body.appendChild(renderer.domElement );
+
+    //create the material of the cube (basic material)
+    var material_cube = new THREE.MeshBasicMaterial();
+    //set the color of the cube
+    material_cube.color=  new THREE.Color(0,1,0);
+    //then set the renderer to wireframe
+    material_cube.wireframe=true;
+    //create the mesh of a cube
+    var geometry_cube = new THREE.BoxGeometry(1,1,1);
+    var cubes=[];
+
+    //the number of cubes composing the strip
+    var n=36;
+
+    function CreateScene()
+    {
+      for (i=0;i<n;i++)
+      {
+        //all the transformation are 4x4 matrices as
+        //discussed in class
+        var rot2 = new THREE.Matrix4();
+        var sca = new THREE.Matrix4();
+        var rot = new THREE.Matrix4();
+        var tra = new THREE.Matrix4();
+        var combined = new THREE.Matrix4();
+        //this is a simple scale matrix to distort the cube to a
+        // simple tile elongated
+        sca.makeScale(0.5,3,1.5);
+        //this rotate the cube along Z axis consider the angle and the
+        //number of subdivisions it makes the moebois join to itself
+        rot2.makeRotationZ ( i*(Math.PI/n) );
+        //this translate the element on the border of the circle and
+        //along the Y
+        tra.makeTranslation (10,0,0);
+        //this rotate each element to the right position on the circle
+        rot.makeRotationY ( i*(2*Math.PI/n) );
+        //notice: this are applied in backward order
+        //4. it is rotate (notice the object is not on the center of rotation anymore)
+        combined.multiply(rot);
+        //3.then it is translated of a certain radius and along a certain y
+        combined.multiply(tra);
+        //2.each tile is rotate along itself to make a strip that join itself
+        combined.multiply(rot2);
+        //1. the simple cube is scaled on 0,0,0 to make it become a tile
+        combined.multiply(sca);
+        cubes[i] = new THREE.Mesh(geometry_cube,material_cube);
+        cubes[i].applyMatrix(combined);
+
+        scene.add(cubes[i]);
+      }
+    }
+
+  CreateScene();
+  //////////////
+	// CONTROLS //
+	//////////////
+
+	// move mouse and: left   click to rotate,
+	//                 middle click to zoom,
+	//                 right  click to pan
+  // add the new control and link to the current camera to transform its position
+
+  controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+  //final update loop
+  var MyUpdateLoop = function ( )
+  {
+    //call the render with the scene and the camera
+    renderer.render(scene,camera);
+
+    controls.update();
+
+    //finally perform a recoursive call to update again
+    //this must be called because the mouse change the camera position
+    requestAnimationFrame(MyUpdateLoop);
+
+  };
+
+  requestAnimationFrame(MyUpdateLoop);
+
+  //this fucntion is called when the window is resized
+  var MyResize = function ( )
+  {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    renderer.setSize(width,height);
+    camera.aspect = width/height;
+    camera.updateProjectionMatrix();
+    renderer.render(scene,camera);
+  };
+
+  //link the resize of the window to the update of the camera
+  window.addEventListener( 'resize', MyResize);
+    </script>
+  </body>
+</html>
