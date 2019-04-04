@@ -47,7 +47,7 @@
     var ratio = window.innerWidth / window.innerHeight;
     //create the perspective camera
     //for parameters see https://threejs.org/docs/#api/cameras/PerspectiveCamera
-    var camera = new THREE.PerspectiveCamera(45, ratio, 0.1, 10000);
+    var camera = new THREE.PerspectiveCamera(45, ratio, 0.1, 1000);
 
     //set the camera position
     camera.position.set(0, 0, 15);
@@ -55,7 +55,7 @@
     camera.lookAt(0, 0, 1);
 
     //Skybox
-    var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+    var skyboxGeometry = new THREE.CubeGeometry(1000, 1000, 1000);
     var skyboxMaterials =
       [
         new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"), side: THREE.DoubleSide }),
@@ -66,8 +66,8 @@
         new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"), side: THREE.DoubleSide }),
       ];
 
-    var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
-    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+    // var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
+    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterials);
 
 
     //create the webgl renderer
