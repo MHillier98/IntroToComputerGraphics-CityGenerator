@@ -47,7 +47,7 @@
     var ratio = window.innerWidth / window.innerHeight;
     //create the perspective camera
     //for parameters see https://threejs.org/docs/#api/cameras/PerspectiveCamera
-    var camera = new THREE.PerspectiveCamera(45, ratio, 0.1, 10000);
+    var camera = new THREE.PerspectiveCamera(90, ratio, 0.1, 10000);
 
     //set the camera position
     camera.position.set(0, 0, 15);
@@ -66,8 +66,8 @@
         new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"), side: THREE.DoubleSide }),
       ];
 
-    var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
-    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+    // var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
+    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterials);
 
 
     //create the webgl renderer
@@ -115,13 +115,16 @@
 
     //Runs the game loop
     var GameLoop = function () {
-      requestAnimationFrame(update);
+
       update();
+      console.log('run update loop');
       render();
+      requestAnimationFrame(GameLoop);
     }
 
-    GameLoop();
 
+
+    requestAnimationFrame(GameLoop);
     //link the resize of the window to the update of the camera
     window.addEventListener('resize', MyResize);
   </script>
