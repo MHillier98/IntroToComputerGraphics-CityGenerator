@@ -61,9 +61,9 @@
     var camera = new THREE.PerspectiveCamera(80, ratio, 0.1, 100000);
 
     //set the camera position
-    var Pos = new THREE.Vector3(-400, 3500, 400);
+    var Pos = new THREE.Vector3(-180, 400, 180);
     camera.position.set(Pos.x, Pos.y, Pos.z);
-    
+
     // and the direction
     var Dir = new THREE.Vector3(0, 0, 0);
     camera.lookAt(Dir.x, Dir.y, Dir.z);
@@ -99,6 +99,39 @@
 
     // var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
     var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterials);
+
+
+
+    // generate the world!
+
+    var baseGeometry = new THREE.PlaneGeometry(1600, 1600);
+    var baseMaterial = new THREE.MeshBasicMaterial({
+      map: new THREE.TextureLoader().load("./assets/road/base.png"),
+      side: THREE.DoubleSide
+    });
+    var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+    baseMesh.rotation.set(Math.PI / 2, 0, 0);
+    scene.add(baseMesh);
+
+
+    var roadGeometry = new THREE.PlaneGeometry(20, 20);
+    var roadMaterial = new THREE.MeshBasicMaterial({
+      map: new THREE.TextureLoader().load("./assets/road/asphalt.png"),
+      side: THREE.DoubleSide
+    });
+
+    for (var i = -20; i < 20; i++) {
+      for (var j = -20; j < 20; j++) {
+        var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
+        scene.add(roadMesh);
+        roadMesh.position.y = 4;
+        roadMesh.position.z = i * 20;
+        roadMesh.position.x = j * 20;
+        roadMesh.rotation.set(Math.PI / 2, 0, 0);
+      }
+    }
+
+
 
     //create the webgl renderer
     var renderer = new THREE.WebGLRenderer();
