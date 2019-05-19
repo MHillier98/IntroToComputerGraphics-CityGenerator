@@ -102,6 +102,7 @@
 
 
 
+
     // generate the world!
 
     var baseGeometry = new THREE.PlaneGeometry(1600, 1600);
@@ -113,23 +114,50 @@
     baseMesh.rotation.set(Math.PI / 2, 0, 0);
     scene.add(baseMesh);
 
+    var roadSize = 20;
 
-    var roadGeometry = new THREE.PlaneGeometry(20, 20);
+    var roadGeometry = new THREE.PlaneGeometry(roadSize, roadSize);
     var roadMaterial = new THREE.MeshBasicMaterial({
       map: new THREE.TextureLoader().load("./assets/road/asphalt.png"),
       side: THREE.DoubleSide
     });
 
-    for (var i = -20; i < 20; i++) {
-      for (var j = -20; j < 20; j++) {
-        var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
-        scene.add(roadMesh);
-        roadMesh.position.y = 4;
-        roadMesh.position.z = i * 20;
-        roadMesh.position.x = j * 20;
-        roadMesh.rotation.set(Math.PI / 2, 0, 0);
+    function AddSquareRoad(x, y, z) {
+      var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
+      scene.add(roadMesh);
+      roadMesh.position.y = y;
+      roadMesh.position.z = z;
+      roadMesh.position.x = x;
+      roadMesh.rotation.set(Math.PI / 2, 0, 0);
+    }
+
+    function AddRoads(x, y, z, width) {
+      for (var w = 0; w < width; w++) {
+        AddSquareRoad((w + x) * roadSize, y, z * roadSize);
+      }
+
+      for (var q = 0; q < width; q++) {
+        AddSquareRoad(x * roadSize, y, (q + z) * roadSize);
       }
     }
+
+    function LayoutRoad(width, spacing, height) {
+      for (var j = -width; j < width; j++) {
+        AddSquareRoad(j * roadSize, height, width * roadSize);
+        if (j % spacing == 0) {
+          for (var k = -width; k < (width + 1); k++) { // +1 so we fill in the final corner
+            AddSquareRoad(width * roadSize, 1, k * roadSize);
+            if (k % spacing == 0 && k < width) { //k < width to let us get the corner
+              AddRoads(j, height, k, spacing);
+            }
+          }
+        }
+      }
+    }
+
+    LayoutRoad(40, 5, 3);
+    // AddRoads(0, 2, 0, 5);
+
 
 
 
