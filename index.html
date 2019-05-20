@@ -7,6 +7,7 @@
   http://learningthreejs.com/blog/2013/08/02/how-to-do-a-procedural-city-in-100lines/
   https://bitbucket.org/KristjanP94/procedural-city-generator/src
   https://github.com/IceCreamYou/THREE.Terrain
+  https://en.wikipedia.org/wiki/Random_walk
 -->
 
 
@@ -155,11 +156,32 @@
       }
     }
 
-    LayoutRoad(40, 5, 3);
-    // AddRoads(0, 2, 0, 5);
+    //LayoutRoad(40, 5, 3); // this lays out a full grid over the full base
 
 
+    function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
+      var randomCoords = [
+        [0, 1],
+        [0, -1],
+        [-1, 0],
+        [1, 0]
+      ][Math.random() * 4 | 0];
+      // console.log(randomCoords);
 
+      var newX = startingX + randomCoords[0];
+      var newZ = startingZ + randomCoords[1];
+
+      AddRoads(newX * 5, 2, newZ * 5, 5);
+
+      var newStepsLeft = stepsLeft - 1;
+      if (newStepsLeft > 0) {
+        RandomWalk(newX, newZ, newStepsLeft, spacing);
+      }
+    }
+
+    for (var x = 0; x < 15; x++) {
+      RandomWalk(0, 0, 15, 5);
+    }
 
     //create the webgl renderer
     var renderer = new THREE.WebGLRenderer();
