@@ -33,6 +33,8 @@
   <script src="js/three.js"> </script>
   <!--and the trackball code-->
   <script src="js/OrbitControls.js"> </script>
+  <!--the model loader-->
+   <script src="js/PLYLoader.js"></script>
 
   <style>
     body {
@@ -182,6 +184,45 @@
     for (var x = 0; x < 15; x++) {
       RandomWalk(0, 0, 15, 5);
     }
+	
+	function AddBuilding(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
+		var loader = new THREE.PLYLoader();
+		var mesh = null;
+		loader.load('assets/building_models/' + model + '.ply', function ( geometry )
+		{
+			  var material = new THREE.MeshPhongMaterial();
+			  material.color= new THREE.Color(r,g,b);
+			  material.shininess=100;
+			  geometry.computeVertexNormals();
+			  mesh = new THREE.Mesh( geometry, material );
+	
+		      geometry.computeBoundingBox();
+		
+		      var center = geometry.boundingBox.getCenter();
+		      var size = geometry.boundingBox.getSize();
+		
+		      var sca = new THREE.Matrix4();
+		      var tra = new THREE.Matrix4();
+			  var rot = new THREE.Matrix4();
+		      var combined = new THREE.Matrix4();
+		
+		      sca.makeScale(2*size.length() * width, 2*size.length() * height, 2*size.length() * depth);
+		      tra.makeTranslation (-center.x + xTra,-center.y + yTra,-center.z + zTra);
+			  rot.makeRotationX(- Math.PI / 2);
+
+		      combined.multiply(sca);
+		      combined.multiply(tra);
+			  combined.multiply(rot);
+		
+		      mesh.applyMatrix(combined);
+		
+		      scene.add( mesh );
+		} );
+	}
+	//AddBuilding(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
+	AddBuilding("Building", 0.5, 0.5, 0.5, 2, 2, 2, 0, 0, 0);
+
+	
 
     //create the webgl renderer
     var renderer = new THREE.WebGLRenderer();
@@ -193,10 +234,17 @@
     document.body.appendChild(renderer.domElement);
 
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
+	var spotlight = new THREE.SpotLight(new THREE.Color(1,1,1), 0.5);
+	spotlight.position.y = 1000;
+	spotlight.angle = Math.PI / 4;
+	var spotLightHelper = new THREE.SpotLightHelper( spotlight );
+	
 
     function CreateScene() {
       scene.add(ambientLight);
       scene.add(skybox);
+	  scene.add( spotlight );
+	  scene.add( spotLightHelper );
     }
 
     CreateScene();
