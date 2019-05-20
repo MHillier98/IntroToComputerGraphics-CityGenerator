@@ -41,7 +41,6 @@
   <div id="info">
   </div>
   <script>
-
     //create the scene
     var scene = new THREE.Scene();
     var ratio = window.innerWidth / window.innerHeight;
@@ -56,15 +55,32 @@
 
     //Skybox
     var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-    var skyboxMaterials =
-      [
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_bk.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_up.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_rt.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"), side: THREE.DoubleSide }),
-      ];
+    var skyboxMaterials = [
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_bk.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_up.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_rt.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"),
+        side: THREE.DoubleSide
+      }),
+    ];
 
     var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
     var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);

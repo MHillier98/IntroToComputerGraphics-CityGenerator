@@ -1,3 +1,16 @@
+<!--
+  SOURCES + INSPIRATIONS
+  https://www.reddit.com/r/programming/comments/39023l/pixel_city_procedurally_generated_city/
+  http://www.shamusyoung.com/twentysidedtale/?p=2983
+  https://gamedev.stackexchange.com/questions/122015/how-to-generate-a-city-street-network/122084
+  https://en.wikipedia.org/wiki/Grid_plan
+  http://learningthreejs.com/blog/2013/08/02/how-to-do-a-procedural-city-in-100lines/
+  https://bitbucket.org/KristjanP94/procedural-city-generator/src
+  https://github.com/IceCreamYou/THREE.Terrain
+  https://en.wikipedia.org/wiki/Random_walk
+-->
+
+
 <html>
 
 <head>
@@ -41,34 +54,134 @@
   <div id="info">
   </div>
   <script>
-
     //create the scene
     var scene = new THREE.Scene();
     var ratio = window.innerWidth / window.innerHeight;
     //create the perspective camera
     //for parameters see https://threejs.org/docs/#api/cameras/PerspectiveCamera
-    var camera = new THREE.PerspectiveCamera(90, ratio, 0.1, 10000);
+    var camera = new THREE.PerspectiveCamera(80, ratio, 0.1, 100000);
 
     //set the camera position
-    camera.position.set(0, 0, 15);
+    var Pos = new THREE.Vector3(-180, 400, 180);
+    camera.position.set(Pos.x, Pos.y, Pos.z);
+
     // and the direction
-    camera.lookAt(0, 0, 1);
+    var Dir = new THREE.Vector3(0, 0, 0);
+    camera.lookAt(Dir.x, Dir.y, Dir.z);
 
     //Skybox
     var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-    var skyboxMaterials =
-      [
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_bk.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_up.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_rt.png"), side: THREE.DoubleSide }),
-        new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"), side: THREE.DoubleSide }),
-      ];
+    var skyboxMaterials = [
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_bk.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_up.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_rt.png"),
+        side: THREE.DoubleSide
+      }),
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"),
+        side: THREE.DoubleSide
+      }),
+    ];
 
     // var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
     var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterials);
 
+
+
+
+    // generate the world!
+
+    var baseGeometry = new THREE.PlaneGeometry(1600, 1600);
+    var baseMaterial = new THREE.MeshBasicMaterial({
+      map: new THREE.TextureLoader().load("./assets/road/base.png"),
+      side: THREE.DoubleSide
+    });
+    var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+    baseMesh.rotation.set(Math.PI / 2, 0, 0);
+    scene.add(baseMesh);
+
+    var roadSize = 20;
+
+    var roadGeometry = new THREE.PlaneGeometry(roadSize, roadSize);
+    var roadMaterial = new THREE.MeshBasicMaterial({
+      map: new THREE.TextureLoader().load("./assets/road/asphalt.png"),
+      side: THREE.DoubleSide
+    });
+
+    function AddSquareRoad(x, y, z) {
+      var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
+      scene.add(roadMesh);
+      roadMesh.position.y = y;
+      roadMesh.position.z = z;
+      roadMesh.position.x = x;
+      roadMesh.rotation.set(Math.PI / 2, 0, 0);
+    }
+
+    function AddRoads(x, y, z, width) {
+      for (var w = 0; w < width; w++) {
+        AddSquareRoad((w + x) * roadSize, y, z * roadSize);
+      }
+
+      for (var q = 0; q < width; q++) {
+        AddSquareRoad(x * roadSize, y, (q + z) * roadSize);
+      }
+    }
+
+    function LayoutRoad(width, spacing, height) {
+      for (var j = -width; j < width; j++) {
+        AddSquareRoad(j * roadSize, height, width * roadSize);
+        if (j % spacing == 0) {
+          for (var k = -width; k < (width + 1); k++) { // +1 so we fill in the final corner
+            AddSquareRoad(width * roadSize, 1, k * roadSize);
+            if (k % spacing == 0 && k < width) { //k < width to let us get the corner
+              AddRoads(j, height, k, spacing);
+            }
+          }
+        }
+      }
+    }
+
+    //LayoutRoad(40, 5, 3); // this lays out a full grid over the full base
+
+
+    function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
+      var randomCoords = [
+        [0, 1],
+        [0, -1],
+        [-1, 0],
+        [1, 0]
+      ][Math.random() * 4 | 0];
+      // console.log(randomCoords);
+
+      var newX = startingX + randomCoords[0];
+      var newZ = startingZ + randomCoords[1];
+
+      AddRoads(newX * 5, 2, newZ * 5, 5);
+
+      var newStepsLeft = stepsLeft - 1;
+      if (newStepsLeft > 0) {
+        RandomWalk(newX, newZ, newStepsLeft, spacing);
+      }
+    }
+
+    for (var x = 0; x < 15; x++) {
+      RandomWalk(0, 0, 15, 5);
+    }
 
     //create the webgl renderer
     var renderer = new THREE.WebGLRenderer();
@@ -81,7 +194,6 @@
 
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
 
-
     function CreateScene() {
       scene.add(ambientLight);
       scene.add(skybox);
@@ -90,12 +202,12 @@
     CreateScene();
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    camera.position.z = 3;
+    camera.position = Pos;
+    camera.lookAt(Dir);
 
     //Generator Logic
     var update = function () {
       controls.update();
-
     };
 
     var render = function () {
@@ -117,12 +229,12 @@
     var GameLoop = function () {
 
       update();
-      console.log('run update loop');
+      // console.log('run update loop');
+      // console.log(camera.position);
+      // console.log(camera.);
       render();
       requestAnimationFrame(GameLoop);
     }
-
-
 
     requestAnimationFrame(GameLoop);
     //link the resize of the window to the update of the camera
