@@ -1,13 +1,7 @@
 <!--
   SOURCES + INSPIRATIONS
-  https://www.reddit.com/r/programming/comments/39023l/pixel_city_procedurally_generated_city/
-  http://www.shamusyoung.com/twentysidedtale/?p=2983
-  https://gamedev.stackexchange.com/questions/122015/how-to-generate-a-city-street-network/122084
-  https://en.wikipedia.org/wiki/Grid_plan
-  http://learningthreejs.com/blog/2013/08/02/how-to-do-a-procedural-city-in-100lines/
-  https://bitbucket.org/KristjanP94/procedural-city-generator/src
-  https://github.com/IceCreamYou/THREE.Terrain
   https://en.wikipedia.org/wiki/Random_walk
+  https://github.com/mrdoob/three.js/blob/master/examples/webgl_postprocessing_outline.html#L338
 -->
 
 
@@ -142,36 +136,86 @@
       }
     }
 
-    function LayoutRoad(width, spacing, height) {
-      for (var j = -width; j < width; j++) {
-        AddSquareRoad(j * roadSize, height, width * roadSize);
-        if (j % spacing == 0) {
-          for (var k = -width; k < (width + 1); k++) { // +1 so we fill in the final corner
-            AddSquareRoad(width * roadSize, 1, k * roadSize);
-            if (k % spacing == 0 && k < width) { //k < width to let us get the corner
-              AddRoads(j, height, k, spacing);
-            }
-          }
+    // this lays out a full grid over the full base
+    // function LayoutRoad(width, spacing, height) {
+    //   for (var j = -width; j < width; j++) {
+    //     AddSquareRoad(j * roadSize, height, width * roadSize);
+    //     if (j % spacing == 0) {
+    //       for (var k = -width; k < (width + 1); k++) { // +1 so we fill in the final corner
+    //         AddSquareRoad(width * roadSize, 1, k * roadSize);
+    //         if (k % spacing == 0 && k < width) { //k < width to let us get the corner
+    //           AddRoads(j, height, k, spacing);
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    //LayoutRoad(40, 5, 3); 
+
+
+    var buildingLocations = [];
+
+    function AddBuilding(startingX, startingZ, randomX, randomZ) {
+      var buildingWidth = 40 + (Math.random() * 40);
+      var buildingHeight = 50 + (Math.random() * 160);
+
+
+      var buildingX = (startingX + randomX) * 20 * 5;
+      var buildingY = buildingHeight / 2
+      var buildingZ = (startingZ + randomZ) * 20 * 5;
+
+      var freeSpace = true;
+
+      for (var b = 0; b < buildingLocations.length; b++) {
+        if (buildingLocations[b].buildingX == buildingX && buildingLocations[b].buildingZ == buildingZ) {
+          freeSpace = false;
         }
+      }
+
+      if (freeSpace) {
+        buildingLocations.push({
+          buildingX,
+          buildingZ
+        });
+
+        var buildingGeometry = new THREE.BoxGeometry(buildingWidth, buildingHeight, buildingWidth);
+        var buildingMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(Math.random(), Math.random(), Math.random())
+        });
+
+        var cube = new THREE.Mesh(buildingGeometry, buildingMaterial);
+        scene.add(cube);
+        cube.position.x = buildingX;
+        cube.position.y = buildingY;
+        cube.position.z = buildingZ;
       }
     }
 
-    //LayoutRoad(40, 5, 3); // this lays out a full grid over the full base
 
 
     function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
-      var randomCoords = [
+      var randomRoadCoords = [
         [0, 1],
         [0, -1],
         [-1, 0],
         [1, 0]
       ][Math.random() * 4 | 0];
-      // console.log(randomCoords);
 
-      var newX = startingX + randomCoords[0];
-      var newZ = startingZ + randomCoords[1];
+      var newX = startingX + randomRoadCoords[0];
+      var newZ = startingZ + randomRoadCoords[1];
 
       AddRoads(newX * 5, 2, newZ * 5, 5);
+
+
+      var randomBuildingCoords = [
+        [0.5, 0.5],
+        [0.5, -0.5],
+        [-0.5, 0.5],
+        [-0.5, -0.5]
+      ][Math.random() * 4 | 0];
+
+      AddBuilding(startingX, startingZ, randomBuildingCoords[0], randomBuildingCoords[1]);
+
 
       var newStepsLeft = stepsLeft - 1;
       if (newStepsLeft > 0) {
@@ -180,8 +224,14 @@
     }
 
     for (var x = 0; x < 15; x++) {
-      RandomWalk(0, 0, 15, 5);
+      RandomWalk(0, 0, 12, 5);
     }
+
+    console.log(buildingLocations);
+
+
+
+
 
     //create the webgl renderer
     var renderer = new THREE.WebGLRenderer();
