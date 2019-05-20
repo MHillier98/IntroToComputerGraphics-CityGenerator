@@ -98,7 +98,7 @@
 
 
 
-    // generate the world!
+    // generate the city!
 
     var baseGeometry = new THREE.PlaneGeometry(1600, 1600);
     var baseMaterial = new THREE.MeshBasicMaterial({
@@ -108,6 +108,8 @@
     var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
     baseMesh.rotation.set(Math.PI / 2, 0, 0);
     scene.add(baseMesh);
+
+
 
     var roadSize = 20;
 
@@ -136,7 +138,6 @@
       }
     }
 
-    // this lays out a full grid over the full base
     // function LayoutRoad(width, spacing, height) {
     //   for (var j = -width; j < width; j++) {
     //     AddSquareRoad(j * roadSize, height, width * roadSize);
@@ -150,6 +151,7 @@
     //     }
     //   }
     // }
+    // this lays out a full grid over the full base
     //LayoutRoad(40, 5, 3); 
 
 
@@ -223,11 +225,10 @@
       }
     }
 
-    for (var x = 0; x < 15; x++) {
-      RandomWalk(0, 0, 12, 5);
+    for (var x = 0; x < 20; x++) {
+      RandomWalk(0, 0, x, 5);
     }
 
-    console.log(buildingLocations);
 
 
 
