@@ -158,10 +158,10 @@
 
 
     var buildingLocations = [];
-
+	
     function AddBuilding(startingX, startingZ, randomX, randomZ) {
-      var buildingWidth = 40 + (Math.random() * 40);
-      var buildingHeight = 50 + (Math.random() * 160);
+      var buildingWidth = 1 + (Math.random() * 1);
+      var buildingHeight = 1 + (Math.random() * 1);
 
 
       var buildingX = (startingX + randomX) * 20 * 5;
@@ -182,18 +182,61 @@
           buildingZ
         });
 
-        var buildingGeometry = new THREE.BoxGeometry(buildingWidth, buildingHeight, buildingWidth);
+        /*var buildingGeometry = new THREE.BoxGeometry(buildingWidth, buildingHeight, buildingWidth);
         var buildingMaterial = new THREE.MeshBasicMaterial({
           color: new THREE.Color(Math.random(), Math.random(), Math.random())
-        });
+        });*/
 
-        var cube = new THREE.Mesh(buildingGeometry, buildingMaterial);
+		var baseColor = Math.random();
+		AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random()/10), baseColor - (Math.random()/10), baseColor - (Math.random()/10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY, buildingZ);
+        
+		/*var cube = new THREE.Mesh(buildingGeometry, buildingMaterial);
         scene.add(cube);
         cube.position.x = buildingX;
         cube.position.y = buildingY;
-        cube.position.z = buildingZ;
+        cube.position.z = buildingZ;*/
       }
     }
+	
+	function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
+		var loader = new THREE.PLYLoader();
+		var mesh = null;
+		loader.load('assets/building_models/b' + model + '.ply', function ( geometry )
+		{
+			  var material = new THREE.MeshPhongMaterial();
+			  material.color= new THREE.Color(r,g,b);
+			  material.shininess=100;
+			  geometry.computeVertexNormals();
+			  mesh = new THREE.Mesh( geometry, material );
+	
+		      geometry.computeBoundingBox();
+		
+		      //var center = geometry.boundingBox.getCenter();
+		      var size = geometry.boundingBox.getSize();
+		
+		      var sca = new THREE.Matrix4();
+		      //var tra = new THREE.Matrix4();
+			  //var rot = new THREE.Matrix4();
+		      var combined = new THREE.Matrix4();
+		
+		      sca.makeScale(2*size.length() * width, 2*size.length() * height, 2*size.length() * depth);
+		      //tra.makeTranslation (center.x + xTra, center.y + yTra, center.z + zTra);
+			  //rot.makeRotationX(- Math.PI / 2);
+
+		      combined.multiply(sca);
+		      //combined.multiply(tra);
+			  //combined.multiply(rot);
+		
+		      mesh.applyMatrix(combined);
+		
+		      scene.add( mesh );
+			  mesh.position.x = xTra;
+			  mesh.position.y = yTra;
+			  mesh.position.z = zTra;
+		} );
+	}
+	//AddBuild(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
+	//AddBuild(1, 0.5, 0.5, 0.5, 1, 1, 1, 0, 0, 0);
 
 
 
@@ -230,45 +273,6 @@
     for (var x = 0; x < 20; x++) {
       RandomWalk(0, 0, x, 5);
     }
-	
-	function AddBuilding(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
-		var loader = new THREE.PLYLoader();
-		var mesh = null;
-		loader.load('assets/building_models/' + model + '.ply', function ( geometry )
-		{
-			  var material = new THREE.MeshPhongMaterial();
-			  material.color= new THREE.Color(r,g,b);
-			  material.shininess=100;
-			  geometry.computeVertexNormals();
-			  mesh = new THREE.Mesh( geometry, material );
-	
-		      geometry.computeBoundingBox();
-		
-		      var center = geometry.boundingBox.getCenter();
-		      var size = geometry.boundingBox.getSize();
-		
-		      var sca = new THREE.Matrix4();
-		      var tra = new THREE.Matrix4();
-			  var rot = new THREE.Matrix4();
-		      var combined = new THREE.Matrix4();
-		
-		      sca.makeScale(2*size.length() * width, 2*size.length() * height, 2*size.length() * depth);
-		      tra.makeTranslation (-center.x + xTra,-center.y + yTra,-center.z + zTra);
-			  rot.makeRotationX(- Math.PI / 2);
-
-		      combined.multiply(sca);
-		      combined.multiply(tra);
-			  combined.multiply(rot);
-		
-		      mesh.applyMatrix(combined);
-		
-		      scene.add( mesh );
-		} );
-	}
-	//AddBuilding(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
-	AddBuilding("Skyscraper", 0.5, 0.5, 0.5, 1, 1, 1, 0, 0, 0);
-
-	
 
 
 
