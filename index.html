@@ -103,12 +103,14 @@
     // generate the city!
 
     var baseGeometry = new THREE.PlaneGeometry(1600, 1600);
-    var baseMaterial = new THREE.MeshBasicMaterial({
+    var baseMaterial = new THREE.MeshPhongMaterial({
       map: new THREE.TextureLoader().load("./assets/road/base.png"),
       side: THREE.DoubleSide
     });
     var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
     baseMesh.rotation.set(Math.PI / 2, 0, 0);
+	baseMesh.receiveShadow = true;
+	baseMesh.castShadow = false;
     scene.add(baseMesh);
 
 
@@ -116,18 +118,22 @@
     var roadSize = 20;
 
     var roadGeometry = new THREE.PlaneGeometry(roadSize, roadSize);
-    var roadMaterial = new THREE.MeshBasicMaterial({
+    var roadMaterial = new THREE.MeshPhongMaterial({
       map: new THREE.TextureLoader().load("./assets/road/asphalt.png"),
       side: THREE.DoubleSide
     });
 
     function AddSquareRoad(x, y, z) {
       var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
-      scene.add(roadMesh);
+	  roadMesh.receiveShadow = true;
+	  roadMesh.castShadow = false;
+      
       roadMesh.position.y = y;
       roadMesh.position.z = z;
       roadMesh.position.x = x;
       roadMesh.rotation.set(Math.PI / 2, 0, 0);
+	  scene.add(roadMesh);
+
     }
 
     function AddRoads(x, y, z, width) {
@@ -187,7 +193,7 @@
           color: new THREE.Color(Math.random(), Math.random(), Math.random())
         });*/
 
-		var baseColor = Math.random();
+		var baseColor = 0.1 + (Math.random()*0.9);
 		AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random()/10), baseColor - (Math.random()/10), baseColor - (Math.random()/10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY, buildingZ);
         
 		/*var cube = new THREE.Mesh(buildingGeometry, buildingMaterial);
@@ -198,6 +204,8 @@
       }
     }
 	
+	//AddBuild(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
+	//AddBuild(1, 0.5, 0.5, 0.5, 1, 1, 1, 0, 0, 0);
 	function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
 		var loader = new THREE.PLYLoader();
 		var mesh = null;
@@ -208,9 +216,10 @@
 			  material.shininess=100;
 			  geometry.computeVertexNormals();
 			  mesh = new THREE.Mesh( geometry, material );
+			  
 	
 		      geometry.computeBoundingBox();
-		
+
 		      //var center = geometry.boundingBox.getCenter();
 		      var size = geometry.boundingBox.getSize();
 		
@@ -228,15 +237,18 @@
 			  //combined.multiply(rot);
 		
 		      mesh.applyMatrix(combined);
-		
-		      scene.add( mesh );
+			  mesh.castShadow = true;
+			  mesh.receiveShadow = true;
+
 			  mesh.position.x = xTra;
 			  mesh.position.y = yTra;
 			  mesh.position.z = zTra;
+
+		      scene.add( mesh );
+			  
 		} );
 	}
-	//AddBuild(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
-	//AddBuild(1, 0.5, 0.5, 0.5, 1, 1, 1, 0, 0, 0);
+	
 
 
 
@@ -274,9 +286,7 @@
       RandomWalk(0, 0, x, 5);
     }
 
-
-
-
+	
 
 
     //create the webgl renderer
@@ -284,21 +294,28 @@
 
     //set the size of the rendering window
     renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     //add the renderer to the current document
     document.body.appendChild(renderer.domElement);
 
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
-	var spotlight = new THREE.SpotLight(new THREE.Color(1,1,1), 0.5);
-	spotlight.position.y = 1000;
-	spotlight.angle = Math.PI / 4;
-	var spotLightHelper = new THREE.SpotLightHelper( spotlight );
+	var light = new THREE.SpotLight(new THREE.Color(1,1,1), 0.5);
+	light.position.y = 1000;
+	light.position.x = 1000;
+	light.penumbra = 0;
+	light.target.position.set(0, 0, 0);
+	light.angle = Math.PI / 4;
+	light.castShadow = true;
+	light.shadow.camera.far = 2000;
+	var spotLightHelper = new THREE.SpotLightHelper( light );
 	
 
     function CreateScene() {
       scene.add(ambientLight);
       scene.add(skybox);
-	  scene.add( spotlight );
+	  scene.add( light );
 	  scene.add( spotLightHelper );
     }
 
