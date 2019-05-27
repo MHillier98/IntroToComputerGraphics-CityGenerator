@@ -8,7 +8,7 @@
 <html>
 
 <head>
-  <title>Simple Geometry Test</title>
+  <title>Procedural City Generator</title>
 </head>
 
 <style>
@@ -104,15 +104,15 @@
 
     // generate the city!
 
-    var baseGeometry = new THREE.PlaneGeometry(1600, 1600);
+    var baseGeometry = new THREE.PlaneGeometry(2000, 2000);
     var baseMaterial = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/road/base.png"),
+      map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
       side: THREE.DoubleSide
     });
     var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
     baseMesh.rotation.set(Math.PI / 2, 0, 0);
-	baseMesh.receiveShadow = true;
-	baseMesh.castShadow = false;
+    baseMesh.receiveShadow = true;
+    baseMesh.castShadow = false;
     scene.add(baseMesh);
 
 
@@ -125,26 +125,49 @@
       side: THREE.DoubleSide
     });
 
+
+    var roadLocations = [];
+
     function AddSquareRoad(x, y, z) {
+
+
       var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
-	  roadMesh.receiveShadow = true;
-	  roadMesh.castShadow = false;
-      
+      roadMesh.receiveShadow = true;
+      roadMesh.castShadow = false;
+
       roadMesh.position.y = y;
       roadMesh.position.z = z;
       roadMesh.position.x = x;
       roadMesh.rotation.set(Math.PI / 2, 0, 0);
-	  scene.add(roadMesh);
 
+      scene.add(roadMesh);
     }
 
     function AddRoads(x, y, z, width) {
-      for (var w = 0; w < width; w++) {
-        AddSquareRoad((w + x) * roadSize, y, z * roadSize);
+
+      var freeSpace = true;
+
+      for (var b = 0; b < roadLocations.length; b++) {
+        if (roadLocations[b].x == x && roadLocations[b].z == z) {
+          freeSpace = false;
+        }
       }
 
-      for (var q = 0; q < width; q++) {
-        AddSquareRoad(x * roadSize, y, (q + z) * roadSize);
+      if (freeSpace) {
+        console.log("road");
+
+        roadLocations.push({
+          x,
+          z
+        });
+
+        for (var w = 0; w < width; w++) {
+          AddSquareRoad((w + x) * roadSize, y, z * roadSize);
+        }
+
+        for (var q = 0; q < width; q++) {
+          AddSquareRoad(x * roadSize, y, (q + z) * roadSize);
+        }
       }
     }
 
@@ -166,11 +189,10 @@
 
 
     var buildingLocations = [];
-	
-    function AddBuilding(startingX, startingZ, randomX, randomZ) {
-      var buildingWidth = 1 + (Math.random() * 1);
-      var buildingHeight = 1 + (Math.random() * 1);
 
+    function AddBuilding(startingX, startingZ, randomX, randomZ) {
+      var buildingWidth = 1.5 + (Math.random() * 1);
+      var buildingHeight = 1.2 + (Math.random() * 1.8);
 
       var buildingX = (startingX + randomX) * 20 * 5;
       var buildingY = buildingHeight / 2
@@ -190,67 +212,57 @@
           buildingZ
         });
 
-        /*var buildingGeometry = new THREE.BoxGeometry(buildingWidth, buildingHeight, buildingWidth);
-        var buildingMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(Math.random(), Math.random(), Math.random())
-        });*/
-
-		var baseColor = 0.1 + (Math.random()*0.9);
-		AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random()/10), baseColor - (Math.random()/10), baseColor - (Math.random()/10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY, buildingZ);
-        
-		/*var cube = new THREE.Mesh(buildingGeometry, buildingMaterial);
-        scene.add(cube);
-        cube.position.x = buildingX;
-        cube.position.y = buildingY;
-        cube.position.z = buildingZ;*/
+        var baseColor = 0.2 + (Math.random() * 0.8);
+        AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() /
+            10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
+          buildingZ);
       }
     }
-	
-	//AddBuild(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
-	//AddBuild(1, 0.5, 0.5, 0.5, 1, 1, 1, 0, 0, 0);
-	function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
-		var loader = new THREE.PLYLoader();
-		var mesh = null;
-		loader.load('assets/building_models/b' + model + '.ply', function ( geometry )
-		{
-			  var material = new THREE.MeshPhongMaterial();
-			  material.color= new THREE.Color(r,g,b);
-			  material.shininess=100;
-			  geometry.computeVertexNormals();
-			  mesh = new THREE.Mesh( geometry, material );
-			  
-	
-		      geometry.computeBoundingBox();
 
-		      //var center = geometry.boundingBox.getCenter();
-		      var size = geometry.boundingBox.getSize();
-		
-		      var sca = new THREE.Matrix4();
-		      //var tra = new THREE.Matrix4();
-			  //var rot = new THREE.Matrix4();
-		      var combined = new THREE.Matrix4();
-		
-		      sca.makeScale(2*size.length() * width, 2*size.length() * height, 2*size.length() * depth);
-		      //tra.makeTranslation (center.x + xTra, center.y + yTra, center.z + zTra);
-			  //rot.makeRotationX(- Math.PI / 2);
+    //AddBuild(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
+    //AddBuild(1, 0.5, 0.5, 0.5, 1, 1, 1, 0, 0, 0);
+    function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
+      var loader = new THREE.PLYLoader();
+      var mesh = null;
+      loader.load('assets/building_models/b' + model + '.ply', function (geometry) {
+        var material = new THREE.MeshPhongMaterial();
+        material.color = new THREE.Color(r, g, b);
+        material.shininess = 100;
+        geometry.computeVertexNormals();
+        mesh = new THREE.Mesh(geometry, material);
 
-		      combined.multiply(sca);
-		      //combined.multiply(tra);
-			  //combined.multiply(rot);
-		
-		      mesh.applyMatrix(combined);
-			  mesh.castShadow = true;
-			  mesh.receiveShadow = true;
 
-			  mesh.position.x = xTra;
-			  mesh.position.y = yTra;
-			  mesh.position.z = zTra;
+        geometry.computeBoundingBox();
 
-		      scene.add( mesh );
-			  
-		} );
-	}
-	
+        //var center = geometry.boundingBox.getCenter();
+        var size = geometry.boundingBox.getSize();
+
+        var sca = new THREE.Matrix4();
+        //var tra = new THREE.Matrix4();
+        //var rot = new THREE.Matrix4();
+        var combined = new THREE.Matrix4();
+
+        sca.makeScale(2 * size.length() * width, 2 * size.length() * height, 2 * size.length() * depth);
+        //tra.makeTranslation (center.x + xTra, center.y + yTra, center.z + zTra);
+        //rot.makeRotationX(- Math.PI / 2);
+
+        combined.multiply(sca);
+        //combined.multiply(tra);
+        //combined.multiply(rot);
+
+        mesh.applyMatrix(combined);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        mesh.position.x = xTra;
+        mesh.position.y = yTra;
+        mesh.position.z = zTra;
+
+        scene.add(mesh);
+
+      });
+    }
+
 
 
 
@@ -284,11 +296,15 @@
       }
     }
 
-    for (var x = 0; x < 20; x++) {
-      RandomWalk(0, 0, x, 5);
+    function GenerateCity(steps) {
+      for (var x = 0; x < steps; x++) {
+        RandomWalk(0, 0, x, 5);
+      }
     }
 
-	
+    var genSteps = 3;
+
+    GenerateCity(genSteps);
 
 
     //create the webgl renderer
@@ -296,36 +312,41 @@
 
     //set the size of the rendering window
     renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     //add the renderer to the current document
     document.body.appendChild(renderer.domElement);
 
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
-	var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-	light.position.y = 1000;
-	light.target.position.set(0, 0, 0);
-	light.castShadow = true;
-	light.shadowCameraLeft = -2000;
-	light.shadowCameraRight = 2000;
-	light.shadowCameraTop = 2000;
-	light.shadowCameraBottom = -2000;
-	light.shadow.camera.far = 2000;
-	//var spotLightHelper = new THREE.SpotLightHelper( light );
-	var helper = new THREE.CameraHelper( light.shadow.camera );
-	
+    var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+    light.position.y = 1000;
+    light.position.x = 500;
+    light.position.z = 500;
+    light.target.position.set(0, 0, 0);
+    light.castShadow = true;
+    light.shadow.camera.left = -2000;
+    light.shadow.camera.right = 2000;
+    light.shadow.camera.top = 2000;
+    light.shadow.camera.bottom = -2000;
+    light.shadow.camera.far = 4000;
+    //var spotLightHelper = new THREE.SpotLightHelper( light );
+    var helper = new THREE.CameraHelper(light.shadow.camera);
+
 
     function CreateScene() {
       scene.add(ambientLight);
       scene.add(skybox);
-	  scene.add( light );
-	  scene.add( helper );
+      scene.add(light);
+      // scene.add(helper);
     }
 
     CreateScene();
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.5;
+    controls.dampingFactor = 1.5;
     camera.position = Pos;
     camera.lookAt(Dir);
 
@@ -364,25 +385,59 @@
     //link the resize of the window to the update of the camera
     window.addEventListener('resize', MyResize);
 
-	var gui;
+    var gui;
 
-	function buildGui() {
-       gui = new dat.GUI();
-       var params = {
-         light_angle: Math.PI/2
+    function buildGui() {
+      gui = new dat.GUI({
+        name: "City Options"
+      });
+      var params = {
+        light_angle: Math.PI / 2,
+        camera_rotate_speed: 1.5,
+        walk_path_steps: 20,
+        generate: function () {
+          GenerateCity(genSteps);
+        }
+      }
 
-       }
+      var lightFolder = gui.addFolder('Light Options');
+      lightFolder.open();
 
-       gui.add( params, 'light_angle', 0, Math.PI ).onChange( function ( val ) {
-		light.position.y = Math.sin(val) * 1000;
-		light.position.x = Math.cos(val) * 1000;
-       } );
+      var lightController = lightFolder.add(params, 'light_angle', 0, Math.PI);
+      lightController.name("Angle");
+      lightController.onChange(function (val) {
+        light.position.y = Math.sin(val) * 1000;
+        light.position.x = Math.cos(val) * 1000;
+      });
 
-     }
+
+
+      var cameraFolder = gui.addFolder('Camera Options');
+      cameraFolder.open();
+
+      var cameraSpeedController = cameraFolder.add(params, 'camera_rotate_speed', 0, 5, 0.1);
+      cameraSpeedController.name("Rotate Speed");
+      cameraSpeedController.onChange(function (val) {
+        controls.autoRotateSpeed = val;
+      });
+
+
+
+      var generationFolder = gui.addFolder('Generation Options');
+      generationFolder.open();
+
+      var genStepsController = generationFolder.add(params, 'walk_path_steps', 1, 60, 1);
+      genStepsController.name("Generation Steps");
+      genStepsController.onChange(function (val) {
+        genSteps = val;
+      });
+
+      var genBtn = generationFolder.add(params, 'generate');
+      genBtn.name("Generate New City!");
+    }
 
     buildGui();
-
   </script>
 </body>
-//Testing
+
 </html>
