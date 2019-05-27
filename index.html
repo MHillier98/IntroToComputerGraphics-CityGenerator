@@ -303,21 +303,24 @@
     document.body.appendChild(renderer.domElement);
 
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
-	var light = new THREE.SpotLight(new THREE.Color(1,1,1), 0.5);
+	var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
 	light.position.y = 1000;
-	light.penumbra = 0;
 	light.target.position.set(0, 0, 0);
-	light.angle = Math.PI / 4;
 	light.castShadow = true;
+	light.shadowCameraLeft = -2000;
+	light.shadowCameraRight = 2000;
+	light.shadowCameraTop = 2000;
+	light.shadowCameraBottom = -2000;
 	light.shadow.camera.far = 2000;
 	//var spotLightHelper = new THREE.SpotLightHelper( light );
+	var helper = new THREE.CameraHelper( light.shadow.camera );
 	
 
     function CreateScene() {
       scene.add(ambientLight);
       scene.add(skybox);
 	  scene.add( light );
-	  //scene.add( spotLightHelper );
+	  scene.add( helper );
     }
 
     CreateScene();
@@ -366,11 +369,11 @@
 	function buildGui() {
        gui = new dat.GUI();
        var params = {
-         spotlight_angle: Math.PI/2
+         light_angle: Math.PI/2
 
        }
 
-       gui.add( params, 'spotlight_angle', 0, Math.PI ).onChange( function ( val ) {
+       gui.add( params, 'light_angle', 0, Math.PI ).onChange( function ( val ) {
 		light.position.y = Math.sin(val) * 1000;
 		light.position.x = Math.cos(val) * 1000;
        } );
