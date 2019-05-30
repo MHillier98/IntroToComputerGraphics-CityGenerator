@@ -230,7 +230,7 @@
         material.shininess = 100;
         geometry.computeVertexNormals();
         mesh = new THREE.Mesh(geometry, material);
-
+		mesh.name = "building";
 
         geometry.computeBoundingBox();
 
@@ -306,6 +306,45 @@
 
     GenerateCity(genSteps);
 
+
+	var raycaster = new THREE.Raycaster();
+	var selectedObject = new THREE.Mesh();
+	selected_building = selectedObject.name;
+	var selectedObjectColor = new THREE.Color();
+	var isSelected = false;
+
+	function onDocumentMouseDown( event ) {
+
+         var mouse = new THREE.Vector2;
+         mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+         mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+         raycaster.setFromCamera( mouse, camera );
+
+         var intersects = raycaster.intersectObjects( scene.children, false );
+
+         if ( intersects.length > 0 ) {
+             if ((intersects[ 0 ].object.name=="building")&&(!isSelected))
+             {
+               console.log("Selected!");
+			   selectedObject = intersects[ 0 ].object;
+			   selectedObjectColor = selectedObject.material.color;
+               selectedObject.material.color= new THREE.Color(1,0.5,0.5);
+               isSelected = true;
+             }
+             if ((intersects[ 0 ].object.name!="building")&&(isSelected))
+             {
+               selectedObject.material.color= selectedObjectColor;
+               var pos=intersects[0].point;
+               console.log("Placed!");
+               selectedObject.position.x=pos.x;
+               selectedObject.position.z=pos.z;
+               isSelected = false;
+             }
+         }
+    }
+
+	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
     //create the webgl renderer
     var renderer = new THREE.WebGLRenderer();
@@ -392,6 +431,7 @@
         name: "City Options"
       });
       var params = {
+		selected_building: "empty",
         light_angle: Math.PI / 2,
         camera_rotate_speed: 1.5,
         walk_path_steps: 20,
@@ -399,6 +439,13 @@
           GenerateCity(genSteps);
         }
       }
+	  var buildingFolder = gui.addFolder( 'Building Options' );
+	  buildingFolder.open();
+
+	  var files = [ 1, 2, 3, 4, 5, 6, 7, 8];
+
+	  var buildingController = buildingFolder.add(params, 'selected_building').listen();
+	  buildingController.name("Building Options");
 
       var lightFolder = gui.addFolder('Light Options');
       lightFolder.open();
