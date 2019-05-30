@@ -192,17 +192,12 @@
       } else if (xxx == 9) {
         baseMaterial.map = TextureL9;
       }
-
-
     }
-    //
 
 
     var roadLocations = [];
 
     function AddSquareRoad(x, y, z) {
-
-
       var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
       roadMesh.receiveShadow = true;
       roadMesh.castShadow = false;
@@ -216,7 +211,6 @@
     }
 
     function AddRoads(x, y, z, width) {
-
       var freeSpace = true;
 
       for (var b = 0; b < roadLocations.length; b++) {
@@ -378,7 +372,6 @@
     scene.add(baseMesh);
 
 
-
     var roadSize = 20;
 
     var roadGeometry = new THREE.PlaneGeometry(roadSize, roadSize);
@@ -391,8 +384,6 @@
     var roadLocations = [];
 
     function AddSquareRoad(x, y, z) {
-
-
       var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
       roadMesh.receiveShadow = true;
       roadMesh.castShadow = false;
@@ -406,7 +397,6 @@
     }
 
     function AddRoads(x, y, z, width) {
-
       var freeSpace = true;
 
       for (var b = 0; b < roadLocations.length; b++) {
@@ -416,8 +406,6 @@
       }
 
       if (freeSpace) {
-        console.log("road");
-
         roadLocations.push({
           x,
           z
