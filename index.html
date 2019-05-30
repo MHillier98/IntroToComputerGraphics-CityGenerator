@@ -403,11 +403,13 @@
       var lightFolder = gui.addFolder('Light Options');
       lightFolder.open();
 
-      var lightController = lightFolder.add(params, 'light_angle', 0, Math.PI);
+      var lightController = lightFolder.add(params, 'light_angle', 0, Math.PI * 2);
       lightController.name("Angle");
       lightController.onChange(function (val) {
         light.position.y = Math.sin(val) * 1000;
         light.position.x = Math.cos(val) * 1000;
+		var colorVal = Math.abs(Math.sin(val));
+		light.color = new THREE.Color(1, colorVal/1, colorVal/1);
       });
 
 
