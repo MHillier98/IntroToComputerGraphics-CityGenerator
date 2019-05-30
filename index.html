@@ -408,14 +408,14 @@
       lightController.onChange(function (val) {
         light.position.y = Math.sin(val) * 1000;
         light.position.x = Math.cos(val) * 1000;
-		var colorVal = Math.abs(Math.sin(val));
-		light.color = new THREE.Color(1, colorVal/1, colorVal/1);
+		var lightVal = Math.abs(Math.sin(val));
+		light.color = new THREE.Color(1, lightVal, lightVal);
 		if (val >= Math.PI){
 			light.intensity = 0;
 			ambientLight.intensity = 0.1;
 		} else {
-			light.intensity = 0.5;
-			ambientLight.intensity = 0.3;
+			light.intensity = 0.25 + 0.25 * lightVal;
+			ambientLight.intensity = 0.1 + 0.2 * lightVal;
 		}
       });
 
