@@ -57,7 +57,8 @@
     var ratio = window.innerWidth / window.innerHeight;
     //create the perspective camera
     //for parameters see https://threejs.org/docs/#api/cameras/PerspectiveCamera
-    var camera = new THREE.PerspectiveCamera(45, ratio, 0.1, 100000);
+
+    var camera = new THREE.PerspectiveCamera(80, ratio, 0.1, 100000);
 
     //set the camera position
     var Pos = new THREE.Vector3(-360, 700, 360);
@@ -234,6 +235,226 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
       }
     }
 
+    var buildingLocations = [];
+
+    function AddBuilding(startingX, startingZ, randomX, randomZ) {
+      var buildingWidth = 1.5 + (Math.random() * 1);
+      var buildingHeight = 1.2 + (Math.random() * 1.8);
+
+      var buildingX = (startingX + randomX) * 20 * 5;
+      var buildingY = buildingHeight / 2
+      var buildingZ = (startingZ + randomZ) * 20 * 5;
+
+      var freeSpace = true;
+
+      for (var b = 0; b < buildingLocations.length; b++) {
+        if (buildingLocations[b].buildingX == buildingX && buildingLocations[b].buildingZ == buildingZ) {
+          freeSpace = false;
+        }
+      }
+
+      if (freeSpace) {
+        buildingLocations.push({
+          buildingX,
+          buildingZ
+        });
+
+        var baseColor = 0.2 + (Math.random() * 0.8);
+        AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() /
+            10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
+          buildingZ);
+      }
+    }
+
+    //AddBuild(name of model, red, blue, green, width, height, depth, x translation, y translation, z translation)
+    //AddBuild(1, 0.5, 0.5, 0.5, 1, 1, 1, 0, 0, 0);
+    function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
+      var loader = new THREE.PLYLoader();
+      var mesh = null;
+      loader.load('assets/building_models/b' + model + '.ply', function (geometry) {
+        var material = new THREE.MeshPhongMaterial();
+        material.color = new THREE.Color(r, g, b);
+        material.shininess = 100;
+        geometry.computeVertexNormals();
+        mesh = new THREE.Mesh(geometry, material);
+
+
+        geometry.computeBoundingBox();
+
+        //var center = geometry.boundingBox.getCenter();
+        var size = geometry.boundingBox.getSize();
+
+        var sca = new THREE.Matrix4();
+        //var tra = new THREE.Matrix4();
+        //var rot = new THREE.Matrix4();
+        var combined = new THREE.Matrix4();
+
+        sca.makeScale(2 * size.length() * width, 2 * size.length() * height, 2 * size.length() * depth);
+        //tra.makeTranslation (center.x + xTra, center.y + yTra, center.z + zTra);
+        //rot.makeRotationX(- Math.PI / 2);
+
+        combined.multiply(sca);
+        //combined.multiply(tra);
+        //combined.multiply(rot);
+
+        mesh.applyMatrix(combined);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+
+    //Skybox
+//     var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+//     var skyboxMaterials = [
+//       new THREE.MeshBasicMaterial({
+//         map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"),
+//         side: THREE.DoubleSide
+//       }),
+//       new THREE.MeshBasicMaterial({
+//         map: new THREE.TextureLoader().load("./assets/skybox/hills_bk.png"),
+//         side: THREE.DoubleSide
+//       }),
+//       new THREE.MeshBasicMaterial({
+//         map: new THREE.TextureLoader().load("./assets/skybox/hills_up.png"),
+//         side: THREE.DoubleSide
+//       }),
+//       new THREE.MeshBasicMaterial({
+//         map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
+//         side: THREE.DoubleSide
+//       }),
+//       new THREE.MeshBasicMaterial({
+//         map: new THREE.TextureLoader().load("./assets/skybox/hills_rt.png"),
+//         side: THREE.DoubleSide
+//       }),
+//       new THREE.MeshBasicMaterial({
+//         map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"),
+//         side: THREE.DoubleSide
+//       }),
+//     ];
+
+        mesh.position.x = xTra;
+        mesh.position.y = yTra;
+        mesh.position.z = zTra;
+
+        scene.add(mesh);
+
+      });
+    }
+
+
+
+
+    function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
+      var randomRoadCoords = [
+        [0, 1],
+        [0, -1],
+        [-1, 0],
+        [1, 0]
+      ][Math.random() * 4 | 0];
+
+      var newX = startingX + randomRoadCoords[0];
+      var newZ = startingZ + randomRoadCoords[1];
+
+      AddRoads(newX * 5, 2, newZ * 5, 5);
+
+
+      var randomBuildingCoords = [
+        [0.5, 0.5],
+        [0.5, -0.5],
+        [-0.5, 0.5],
+        [-0.5, -0.5]
+      ][Math.random() * 4 | 0];
+
+      AddBuilding(startingX, startingZ, randomBuildingCoords[0], randomBuildingCoords[1]);
+
+
+      var newStepsLeft = stepsLeft - 1;
+      if (newStepsLeft > 0) {
+        RandomWalk(newX, newZ, newStepsLeft, spacing);
+      }
+    }
+
+    function GenerateCity(steps) {
+      for (var x = 0; x < steps; x++) {
+        RandomWalk(0, 0, x, 5);
+      }
+    }
+
+    var genSteps = 3;
+
+    GenerateCity(genSteps);
+
+
+
+
+    // generate the city!
+
+    var baseGeometry = new THREE.PlaneGeometry(2000, 2000);
+    var baseMaterial = new THREE.MeshPhongMaterial({
+      map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
+      side: THREE.DoubleSide
+    });
+    var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+    baseMesh.rotation.set(Math.PI / 2, 0, 0);
+    baseMesh.receiveShadow = true;
+    baseMesh.castShadow = false;
+    scene.add(baseMesh);
+
+
+
+    var roadSize = 20;
+
+    var roadGeometry = new THREE.PlaneGeometry(roadSize, roadSize);
+    var roadMaterial = new THREE.MeshPhongMaterial({
+      map: new THREE.TextureLoader().load("./assets/road/asphalt.png"),
+      side: THREE.DoubleSide
+    });
+
+
+    var roadLocations = [];
+
+    function AddSquareRoad(x, y, z) {
+
+
+      var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
+      roadMesh.receiveShadow = true;
+      roadMesh.castShadow = false;
+
+      roadMesh.position.y = y;
+      roadMesh.position.z = z;
+      roadMesh.position.x = x;
+      roadMesh.rotation.set(Math.PI / 2, 0, 0);
+
+      scene.add(roadMesh);
+    }
+
+    function AddRoads(x, y, z, width) {
+
+      var freeSpace = true;
+
+      for (var b = 0; b < roadLocations.length; b++) {
+        if (roadLocations[b].x == x && roadLocations[b].z == z) {
+          freeSpace = false;
+        }
+      }
+
+      if (freeSpace) {
+        console.log("road");
+
+        roadLocations.push({
+          x,
+          z
+        });
+
+        for (var w = 0; w < width; w++) {
+          AddSquareRoad((w + x) * roadSize, y, z * roadSize);
+        }
+
+        for (var q = 0; q < width; q++) {
+          AddSquareRoad(x * roadSize, y, (q + z) * roadSize);
+        }
+      }
+    }
+
     // function LayoutRoad(width, spacing, height) {
     //   for (var j = -width; j < width; j++) {
     //     AddSquareRoad(j * roadSize, height, width * roadSize);
@@ -248,7 +469,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
     //   }
     // }
     // this lays out a full grid over the full base
-    //LayoutRoad(40, 5, 3);
+    //LayoutRoad(40, 5, 3); 
 
 
     var buildingLocations = [];
@@ -460,7 +681,6 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
         walk_path_steps: 20,
         generate: function () {
           GenerateCity(genSteps);
-        },
         generate1: function () {           //match the skybox
    			  scene.background = textureCube1;
         },
@@ -505,7 +725,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
         },
         generate99: function () {
           textureT(9);
-        }
+        },
       }
 
       var lightFolder = gui.addFolder('Light Options');
