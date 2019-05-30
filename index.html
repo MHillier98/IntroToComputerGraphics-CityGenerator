@@ -410,6 +410,13 @@
         light.position.x = Math.cos(val) * 1000;
 		var colorVal = Math.abs(Math.sin(val));
 		light.color = new THREE.Color(1, colorVal/1, colorVal/1);
+		if (val >= Math.PI){
+			light.intensity = 0;
+			ambientLight.intensity = 0.1;
+		} else {
+			light.intensity = 0.5;
+			ambientLight.intensity = 0.3;
+		}
       });
 
 
