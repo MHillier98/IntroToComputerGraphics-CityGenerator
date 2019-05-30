@@ -52,6 +52,8 @@
   <div id="info">
   </div>
   <script>
+
+
     //create the scene
     var scene = new THREE.Scene();
     var ratio = window.innerWidth / window.innerHeight;
@@ -69,94 +71,100 @@
     camera.lookAt(Dir.x, Dir.y, Dir.z);
 
 
-//Skybox
-var r1 = "./assets/skybox/1/";
-var urls1 = [ r1 + "FieryNebula_front5.jpg", r1 + "FieryNebula_back6.jpg",
-		     r1 + "FieryNebula_top3.jpg", r1 + "FieryNebula_bottom4.jpg",
-			 r1 + "FieryNebula_left2.jpg", r1 + "FieryNebula_right1.jpg" ];
-var  textureCube1 = new THREE.CubeTextureLoader().load( urls1 );
 
-var r2 = "./assets/skybox/2/";
-var urls2 = [ r2 + "px.jpg", r2 + "nx.jpg",
-		     r2 + "py.jpg", r2 + "ny.jpg",
-			 r2 + "pz.jpg", r2 + "nz.jpg" ];
-var  textureCube2 = new THREE.CubeTextureLoader().load( urls2 );
 
-var r5 = "./assets/skybox/5/";
-var urls5 = [ r5 + "rt.png", r5 + "lt.png",
-					  r5 + "up.png", r5 + "dn.png",
-					 	r5 + "bk.png", r5 + "ft.png" ];
-var  textureCube5 = new THREE.CubeTextureLoader().load( urls5 );
-     scene.background = textureCube5;
+    //Skybox
+    var r1 = "./assets/skybox/1/";
+    var urls1 = [r1 + "FieryNebula_front5.jpg", r1 + "FieryNebula_back6.jpg",
+    r1 + "FieryNebula_top3.jpg", r1 + "FieryNebula_bottom4.jpg",
+    r1 + "FieryNebula_left2.jpg", r1 + "FieryNebula_right1.jpg"];
+    var textureCube1 = new THREE.CubeTextureLoader().load(urls1);
 
-var r7 = "./assets/skybox/7/";
-var urls7 = [ r7 + "posx.jpg", r7 + "negx.jpg",
-		     r7 + "posy.jpg", r7 + "negy.jpg",
-			 r7 + "posz.jpg", r7 + "negz.jpg" ];
-var  textureCube7 = new THREE.CubeTextureLoader().load( urls7 );
+    var r2 = "./assets/skybox/2/";
+    var urls2 = [r2 + "px.jpg", r2 + "nx.jpg",
+    r2 + "py.jpg", r2 + "ny.jpg",
+    r2 + "pz.jpg", r2 + "nz.jpg"];
+    var textureCube2 = new THREE.CubeTextureLoader().load(urls2);
 
-var r8 = "./assets/skybox/8/";
-var urls8 = [ r8 + "px.jpg", r8 + "nx.jpg",
-		     r8 + "py.jpg", r8 + "ny.jpg",
-			 r8 + "pz.jpg", r8 + "nz.jpg" ];
-var  textureCube8 = new THREE.CubeTextureLoader().load( urls8 );
+    var r5 = "./assets/skybox/5/";
+    var urls5 = [r5 + "rt.png", r5 + "lt.png",
+    r5 + "up.png", r5 + "dn.png",
+    r5 + "bk.png", r5 + "ft.png"];
+    var textureCube5 = new THREE.CubeTextureLoader().load(urls5);
+    scene.background = textureCube5;
 
-var r9 = "./assets/skybox/9/";
-var urls9 = [ r9 + "posx.png", r9 + "negx.png",
-		     r9 + "posy.png", r9 + "negy.png",
-			 r9 + "posz.png", r9 + "negz.png" ];
-var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
+    var r7 = "./assets/skybox/7/";
+    var urls7 = [r7 + "posx.jpg", r7 + "negx.jpg",
+    r7 + "posy.jpg", r7 + "negy.jpg",
+    r7 + "posz.jpg", r7 + "negz.jpg"];
+    var textureCube7 = new THREE.CubeTextureLoader().load(urls7);
 
-//ground
-    var baseGeometry = new THREE.PlaneGeometry(20000, 20000);						//set size of ground
-		var TextureL1 = new THREE.TextureLoader().load("./img/hills_dn.png");
-		    TextureL1.wrapS = TextureL1.wrapT = THREE.RepeatWrapping;
-		    TextureL1.repeat.set( 350, 350 );
+    var r8 = "./assets/skybox/8/";
+    var urls8 = [r8 + "px.jpg", r8 + "nx.jpg",
+    r8 + "py.jpg", r8 + "ny.jpg",
+    r8 + "pz.jpg", r8 + "nz.jpg"];
+    var textureCube8 = new THREE.CubeTextureLoader().load(urls8);
 
-		var TextureL2 = new THREE.TextureLoader().load("./img/1.jpg");
-		    TextureL2.wrapS = TextureL2.wrapT = THREE.RepeatWrapping;
-		    TextureL2.repeat.set( 350, 350 );
+    var r9 = "./assets/skybox/9/";
+    var urls9 = [r9 + "posx.png", r9 + "negx.png",
+    r9 + "posy.png", r9 + "negy.png",
+    r9 + "posz.png", r9 + "negz.png"];
+    var textureCube9 = new THREE.CubeTextureLoader().load(urls9);
 
-		var TextureL3 = new THREE.TextureLoader().load("./img/2.jpg");
-		    TextureL3.wrapS = TextureL3.wrapT = THREE.RepeatWrapping;
-		    TextureL3.repeat.set( 350, 350 );
+    //ground
+    // var baseGeometry = new THREE.PlaneGeometry(20000, 20000);						//set size of ground
+    var TextureL1 = new THREE.TextureLoader().load("./img/hills_dn.png");
+    TextureL1.wrapS = TextureL1.wrapT = THREE.RepeatWrapping;
+    TextureL1.repeat.set(350, 350);
 
-		var TextureL4 = new THREE.TextureLoader().load("./img/3.jpg");
-		    TextureL4.wrapS = TextureL4.wrapT = THREE.RepeatWrapping;
-		    TextureL4.repeat.set( 350, 350 );
+    var TextureL2 = new THREE.TextureLoader().load("./img/1.jpg");
+    TextureL2.wrapS = TextureL2.wrapT = THREE.RepeatWrapping;
+    TextureL2.repeat.set(350, 350);
 
-		var TextureL5 = new THREE.TextureLoader().load("./img/4.jpg");
-		    TextureL5.wrapS = TextureL5.wrapT = THREE.RepeatWrapping;
-		    TextureL5.repeat.set( 350, 350 );
+    var TextureL3 = new THREE.TextureLoader().load("./img/2.jpg");
+    TextureL3.wrapS = TextureL3.wrapT = THREE.RepeatWrapping;
+    TextureL3.repeat.set(350, 350);
 
-		var TextureL6 = new THREE.TextureLoader().load("./img/5.jpg");
-		    TextureL6.wrapS = TextureL6.wrapT = THREE.RepeatWrapping;
-		    TextureL6.repeat.set( 550, 550 );
+    var TextureL4 = new THREE.TextureLoader().load("./img/3.jpg");
+    TextureL4.wrapS = TextureL4.wrapT = THREE.RepeatWrapping;
+    TextureL4.repeat.set(350, 350);
 
-		var TextureL7 = new THREE.TextureLoader().load("./img/6.jpg");
-		    TextureL7.wrapS = TextureL7.wrapT = THREE.RepeatWrapping;
-		    TextureL7.repeat.set( 350, 350 );
+    var TextureL5 = new THREE.TextureLoader().load("./img/4.jpg");
+    TextureL5.wrapS = TextureL5.wrapT = THREE.RepeatWrapping;
+    TextureL5.repeat.set(350, 350);
 
-		var TextureL8 = new THREE.TextureLoader().load("./img/7.jpg");
-		    TextureL8.wrapS = TextureL8.wrapT = THREE.RepeatWrapping;
-		    TextureL8.repeat.set( 350, 350 );
+    var TextureL6 = new THREE.TextureLoader().load("./img/5.jpg");
+    TextureL6.wrapS = TextureL6.wrapT = THREE.RepeatWrapping;
+    TextureL6.repeat.set(550, 550);
 
-		var TextureL9 = new THREE.TextureLoader().load("./img/8.jpg");
-		    TextureL9.wrapS = TextureL9.wrapT = THREE.RepeatWrapping;
-		    TextureL9.repeat.set( 50, 50 );
+    var TextureL7 = new THREE.TextureLoader().load("./img/6.jpg");
+    TextureL7.wrapS = TextureL7.wrapT = THREE.RepeatWrapping;
+    TextureL7.repeat.set(350, 350);
+
+    var TextureL8 = new THREE.TextureLoader().load("./img/7.jpg");
+    TextureL8.wrapS = TextureL8.wrapT = THREE.RepeatWrapping;
+    TextureL8.repeat.set(350, 350);
+
+    var TextureL9 = new THREE.TextureLoader().load("./img/8.jpg");
+    TextureL9.wrapS = TextureL9.wrapT = THREE.RepeatWrapping;
+    TextureL9.repeat.set(50, 50);
 
     var baseMaterial = new THREE.MeshPhongMaterial({
       map: TextureL1,
-			transparent : true,
-			opacity : 0.8,		    	//set the Transparency
+      transparent: true,
+      opacity: 0.8,		    	//set the Transparency
       side: THREE.DoubleSide
     });
+
+
     var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
     baseMesh.rotation.set(Math.PI / 2, 0, 0);
     baseMesh.receiveShadow = true;
     baseMesh.castShadow = false;
     scene.add(baseMesh);
 
+
+    //Setup for road
     var roadSize = 20;
     var roadGeometry = new THREE.PlaneGeometry(roadSize, roadSize);
     var roadMaterial = new THREE.MeshPhongMaterial({
@@ -164,30 +172,30 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
       side: THREE.DoubleSide
     });
 
-		function textureT(xxx){
-			if( xxx== 1 ){
-				baseMaterial.map = TextureL1;
-			}else if( xxx== 2 ){
-				baseMaterial.map = TextureL2;
-			}else if( xxx== 3 ){
-				baseMaterial.map = TextureL3;
-			}else if( xxx== 4 ){
-				baseMaterial.map = TextureL4;
-			}else if( xxx== 5 ){
-				baseMaterial.map = TextureL5;
-			}else if( xxx== 6 ){
-				baseMaterial.map = TextureL6;
-			}else if( xxx== 7 ){
-				baseMaterial.map = TextureL7;
-			}else if( xxx== 8 ){
-				baseMaterial.map = TextureL8;
-			}else if( xxx== 9 ){
-				baseMaterial.map = TextureL9;
-			}
+    function textureT(xxx) {
+      if (xxx == 1) {
+        baseMaterial.map = TextureL1;
+      } else if (xxx == 2) {
+        baseMaterial.map = TextureL2;
+      } else if (xxx == 3) {
+        baseMaterial.map = TextureL3;
+      } else if (xxx == 4) {
+        baseMaterial.map = TextureL4;
+      } else if (xxx == 5) {
+        baseMaterial.map = TextureL5;
+      } else if (xxx == 6) {
+        baseMaterial.map = TextureL6;
+      } else if (xxx == 7) {
+        baseMaterial.map = TextureL7;
+      } else if (xxx == 8) {
+        baseMaterial.map = TextureL8;
+      } else if (xxx == 9) {
+        baseMaterial.map = TextureL9;
+      }
 
 
-		}
-//
+    }
+    //
 
 
     var roadLocations = [];
@@ -261,7 +269,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
 
         var baseColor = 0.2 + (Math.random() * 0.8);
         AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() /
-            10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
+          10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
           buildingZ);
       }
     }
@@ -300,36 +308,6 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
         mesh.applyMatrix(combined);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
-
-
-    //Skybox
-//     var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-//     var skyboxMaterials = [
-//       new THREE.MeshBasicMaterial({
-//         map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"),
-//         side: THREE.DoubleSide
-//       }),
-//       new THREE.MeshBasicMaterial({
-//         map: new THREE.TextureLoader().load("./assets/skybox/hills_bk.png"),
-//         side: THREE.DoubleSide
-//       }),
-//       new THREE.MeshBasicMaterial({
-//         map: new THREE.TextureLoader().load("./assets/skybox/hills_up.png"),
-//         side: THREE.DoubleSide
-//       }),
-//       new THREE.MeshBasicMaterial({
-//         map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
-//         side: THREE.DoubleSide
-//       }),
-//       new THREE.MeshBasicMaterial({
-//         map: new THREE.TextureLoader().load("./assets/skybox/hills_rt.png"),
-//         side: THREE.DoubleSide
-//       }),
-//       new THREE.MeshBasicMaterial({
-//         map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"),
-//         side: THREE.DoubleSide
-//       }),
-//     ];
 
         mesh.position.x = xTra;
         mesh.position.y = yTra;
@@ -388,7 +366,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
 
     // generate the city!
 
-    var baseGeometry = new THREE.PlaneGeometry(2000, 2000);
+    var baseGeometry = new THREE.PlaneGeometry(20000, 20000);
     var baseMaterial = new THREE.MeshPhongMaterial({
       map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
       side: THREE.DoubleSide
@@ -498,7 +476,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
 
         var baseColor = 0.2 + (Math.random() * 0.8);
         AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() /
-            10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
+          10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
           buildingZ);
       }
     }
@@ -602,6 +580,16 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
     //add the renderer to the current document
     document.body.appendChild(renderer.domElement);
 
+
+    //Controls
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0;
+    controls.dampingFactor = 1.5;
+    camera.position = Pos;
+    camera.lookAt(Dir);
+
+    //Lighting Settings
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
     var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
     light.position.y = 1000;
@@ -614,25 +602,19 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
     light.shadow.camera.top = 2000;
     light.shadow.camera.bottom = -2000;
     light.shadow.camera.far = 4000;
-    //var spotLightHelper = new THREE.SpotLightHelper( light );
     var helper = new THREE.CameraHelper(light.shadow.camera);
 
 
     function CreateScene() {
       scene.add(ambientLight);
-//    scene.add(skybox);
+      //    scene.add(skybox);
       scene.add(light);
       // scene.add(helper);
     }
 
     CreateScene();
 
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.5;
-    controls.dampingFactor = 1.5;
-    camera.position = Pos;
-    camera.lookAt(Dir);
+
 
     //Generator Logic
     var update = function () {
@@ -656,11 +638,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
 
     //Runs the game loop
     var GameLoop = function () {
-
       update();
-      // console.log('run update loop');
-      // console.log(camera.position);
-      // console.log(camera.);
       render();
       requestAnimationFrame(GameLoop);
     }
@@ -677,27 +655,28 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
       });
       var params = {
         light_angle: Math.PI / 2,
-        camera_rotate_speed: 1.5,
+        camera_rotate_speed: 0,
         walk_path_steps: 20,
         generate: function () {
           GenerateCity(genSteps);
+        },
         generate1: function () {           //match the skybox
-   			  scene.background = textureCube1;
+          scene.background = textureCube1;
         },
         generate2: function () {
-   			  scene.background = textureCube2;
+          scene.background = textureCube2;
         },
         generate5: function () {
-   			  scene.background = textureCube5;
+          scene.background = textureCube5;
         },
         generate7: function () {
-   			  scene.background = textureCube7;
+          scene.background = textureCube7;
         },
         generate8: function () {
-   			  scene.background = textureCube8;
+          scene.background = textureCube8;
         },
         generate9: function () {
-   			  scene.background = textureCube9;
+          scene.background = textureCube9;
         },
         generate11: function () {
           textureT(1);												//match the ground
@@ -764,12 +743,12 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
       genBtn.name("Generate New City!");
 
 
-//Skybox
+      //Skybox
       var generationFolder1 = gui.addFolder('Skybox');
       generationFolder1.open();
 
       var genBtn1 = generationFolder1.add(params, 'generate1');
-      genBtn1.name("Sky1");		
+      genBtn1.name("Sky1");
 
       var genBtn2 = generationFolder1.add(params, 'generate2');
       genBtn2.name("Sky2");
@@ -788,7 +767,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
 
 
 
-//ground
+      //ground
       var generationFolder11 = gui.addFolder('Ground Texture');
       generationFolder11.open();
 
@@ -810,7 +789,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
       var genBtn66 = generationFolder11.add(params, 'generate66');
       genBtn66.name("Ground6");
 
-       var genBtn77 = generationFolder11.add(params, 'generate77');
+      var genBtn77 = generationFolder11.add(params, 'generate77');
       genBtn77.name("Ground7");
 
       var genBtn88 = generationFolder11.add(params, 'generate88');
@@ -819,7 +798,7 @@ var  textureCube9 = new THREE.CubeTextureLoader().load( urls9 );
       var genBtn99 = generationFolder11.add(params, 'generate99');
       genBtn99.name("Ground9");
 
-   }
+    }
 
     buildGui();
   </script>
