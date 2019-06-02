@@ -1,10 +1,3 @@
-<!--
-  SOURCES + INSPIRATIONS
-  https://en.wikipedia.org/wiki/Random_walk
-  https://github.com/mrdoob/three.js/blob/master/examples/webgl_postprocessing_outline.html#L338
--->
-
-
 <html>
 
 <head>
@@ -154,7 +147,7 @@
       }
 
       if (freeSpace) {
-        console.log("road");
+        // console.log("road");
 
         roadLocations.push({
           x,
@@ -230,7 +223,7 @@
         material.shininess = 100;
         geometry.computeVertexNormals();
         mesh = new THREE.Mesh(geometry, material);
-		mesh.name = "building";
+        mesh.name = "building";
 
         geometry.computeBoundingBox();
 
@@ -307,44 +300,67 @@
     GenerateCity(genSteps);
 
 
-	var raycaster = new THREE.Raycaster();
-	var selectedObject = new THREE.Mesh();
-	selected_building = selectedObject.name;
-	var selectedObjectColor = new THREE.Color();
-	var isSelected = false;
+    var raycaster = new THREE.Raycaster();
+    var selectedObject = new THREE.Mesh();
+    selected_building = selectedObject.name;
+    var selectedObjectColor = new THREE.Color();
+    var selectedObjectScale;
+    var isSelected = false;
 
-	function onDocumentMouseDown( event ) {
+    function onDocumentMouseDown(event) {
+      switch (event.button) {
+        case 0: //left
+          var mouse = new THREE.Vector2;
+          mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+          mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+          if (mouse.x < 0.42) {
+            raycaster.setFromCamera(mouse, camera);
 
-         var mouse = new THREE.Vector2;
-         mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
-         mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+            var intersects = raycaster.intersectObjects(scene.children, false);
 
-         raycaster.setFromCamera( mouse, camera );
+            if (intersects.length > 0) {
+              if ((intersects[0].object.name == "building") && (!isSelected)) {
+                // console.log("Selected!");
+                selectedObject = intersects[0].object;
+                selectedObjectColor = selectedObject.material.color;
+                selectedObjectScale = selectedObject.scale.y;
+                // console.log(selectedObjectScale);
+                selectedObject.material.color = new THREE.Color(1, 0.5, 0.5);
+                isSelected = true;
+                selectCheck();
+              }
+              if ((intersects[0].object.name != "building") && (isSelected)) {
+                selectedObject.material.color = selectedObjectColor;
+                var pos = intersects[0].point;
+                // console.log("Placed!");
+                selectedObject.position.x = pos.x;
+                selectedObject.position.z = pos.z;
+                isSelected = false;
+              }
+            }
+          }
+          // console.log(scene);
+          break;
+        case 1: //middle
+          break;
+        case 2: //right
+          var mouse = new THREE.Vector2;
+          mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+          mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
 
-         var intersects = raycaster.intersectObjects( scene.children, false );
+          raycaster.setFromCamera(mouse, camera);
 
-         if ( intersects.length > 0 ) {
-             if ((intersects[ 0 ].object.name=="building")&&(!isSelected))
-             {
-               console.log("Selected!");
-			   selectedObject = intersects[ 0 ].object;
-			   selectedObjectColor = selectedObject.material.color;
-               selectedObject.material.color= new THREE.Color(1,0.5,0.5);
-               isSelected = true;
-             }
-             if ((intersects[ 0 ].object.name!="building")&&(isSelected))
-             {
-               selectedObject.material.color= selectedObjectColor;
-               var pos=intersects[0].point;
-               console.log("Placed!");
-               selectedObject.position.x=pos.x;
-               selectedObject.position.z=pos.z;
-               isSelected = false;
-             }
-         }
+          var intersects = raycaster.intersectObjects(scene.children, false);
+          if ((intersects[0].object.name != "building") && (isSelected)) {
+            selectedObject.material.color = selectedObjectColor;
+            isSelected = false;
+            // console.log('Deselected');
+          }
+          break;
+      }
     }
 
-	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+    document.addEventListener('mousedown', onDocumentMouseDown, false);
 
     //create the webgl renderer
     var renderer = new THREE.WebGLRenderer();
@@ -425,27 +441,24 @@
     window.addEventListener('resize', MyResize);
 
     var gui;
+    var params = {
+      selected_building: "empty",
+      light_angle: Math.PI / 2,
+      camera_rotate_speed: 1.5,
+      walk_path_steps: 20,
+      generate: function () {
+        GenerateCity(genSteps);
+      }
+    }
 
     function buildGui() {
       gui = new dat.GUI({
         name: "City Options"
       });
-      var params = {
-		selected_building: "empty",
-        light_angle: Math.PI / 2,
-        camera_rotate_speed: 1.5,
-        walk_path_steps: 20,
-        generate: function () {
-          GenerateCity(genSteps);
-        }
-      }
-	  var buildingFolder = gui.addFolder( 'Building Options' );
-	  buildingFolder.open();
 
-	  var files = [ 1, 2, 3, 4, 5, 6, 7, 8];
 
-	  var buildingController = buildingFolder.add(params, 'selected_building').listen();
-	  buildingController.name("Building Options");
+
+      selectCheck();
 
       var lightFolder = gui.addFolder('Light Options');
       lightFolder.open();
@@ -455,15 +468,15 @@
       lightController.onChange(function (val) {
         light.position.y = Math.sin(val) * 1000;
         light.position.x = Math.cos(val) * 1000;
-		var lightVal = Math.abs(Math.sin(val));
-		light.color = new THREE.Color(1, lightVal, lightVal);
-		if (val >= Math.PI){
-			light.intensity = 0;
-			ambientLight.intensity = 0.1;
-		} else {
-			light.intensity = 0.25 + 0.25 * lightVal;
-			ambientLight.intensity = 0.1 + 0.2 * lightVal;
-		}
+        var lightVal = Math.abs(Math.sin(val));
+        light.color = new THREE.Color(1, lightVal, lightVal);
+        if (val >= Math.PI) {
+          light.intensity = 0;
+          ambientLight.intensity = 0.1;
+        } else {
+          light.intensity = 0.25 + 0.25 * lightVal;
+          ambientLight.intensity = 0.1 + 0.2 * lightVal;
+        }
       });
 
 
@@ -490,6 +503,36 @@
 
       var genBtn = generationFolder.add(params, 'generate');
       genBtn.name("Generate New City!");
+
+
+    }
+
+    function selectCheck() {
+      if (isSelected == true) {
+        var buildingFolder = gui.addFolder('Building Options');
+        buildingFolder.open();
+
+        var files = [1, 2, 3, 4, 5, 6, 7, 8];
+
+        var buildingController = buildingFolder.add(params, 'selected_building').listen();
+        buildingController.name("Building Options");
+        // console.log(selectedObject);
+        var paramcolor = {
+          color: 0xff00ff
+        };
+        var paramscale = {
+          scale: selectedObjectScale
+        };
+        buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
+          selectedObjectColor.set(paramcolor.color);
+        });
+        buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
+          selectedObject.scale.y = paramscale.scale;
+        });
+
+
+
+      }
     }
 
     buildGui();
