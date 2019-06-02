@@ -10,6 +10,7 @@
   <script src="js/PLYLoader.js"></script>
   <!--the GUI-->
   <script src="js/dat.gui.min.js"></script>
+  <script src="js/PointerLockControls.js"></script>
 
   <style>
     body {
@@ -92,6 +93,15 @@
 
     var camera = new THREE.PerspectiveCamera(80, ratio, 0.1, 100000);
 
+    var velocity = new THREE.Vector3();
+    var direction = new THREE.Vector3();
+    var prevTime = performance.now();
+
+    var moveForward = false;
+    var moveBackward = false;
+    var moveLeft = false;
+    var moveRight = false;
+
     //set the camera position
     var Pos = new THREE.Vector3(-360, 700, 360);
     camera.position.set(Pos.x, Pos.y, Pos.z);
@@ -113,12 +123,16 @@
     document.body.appendChild(renderer.domElement);
 
     //Controls
+    keyboardControls = new THREE.PointerLockControls(camera);
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0;
     controls.dampingFactor = 1.5;
     camera.position = Pos;
     camera.lookAt(Dir);
+
+    keyboardControls.enabled = false;
+    scene.add(keyboardControls.getObject());
 
 
     //move this to the controls section, double check for duplica
@@ -312,6 +326,64 @@
     //Amount of buildings to generate
     var genSteps = 20;
 
+    var onKeyDown = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // up
+        case 87: // w
+          moveForward = true;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = true;
+          break;
+
+        case 40: // down
+        case 83: // s
+          moveBackward = true;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = true;
+          break;
+
+      }
+
+    };
+
+    var onKeyUp = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // up
+        case 87: // w
+          moveForward = false;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = false;
+          break;
+
+        case 40: // down
+        case 83: // s
+          moveBackward = false;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = false;
+          break;
+
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
+
     function textureT(xxx) {
       if (xxx == 1) {
         baseMaterial.map = TextureL1;
@@ -491,6 +563,24 @@
     //Generator Logic
     var update = function () {
       controls.update();
+
+      var time = performance.now();
+      var delta = (time - prevTime) / 1000;
+
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+
+      direction.z = Number(moveForward) - Number(moveBackward);
+      direction.x = Number(moveLeft) - Number(moveRight);
+      direction.normalize();
+
+      if (moveForward || moveBackward) velocity.z -= direction.z * 4000.0 * delta;
+      if (moveLeft || moveRight) velocity.x -= direction.x * 4000.0 * delta;
+
+      keyboardControls.getObject().translateX(velocity.x * delta);
+      keyboardControls.getObject().translateZ(velocity.z * delta);
+
+      prevTime = time;
     };
 
     var render = function () {
@@ -527,27 +617,31 @@
       camera_rotate_speed: 0,
       walk_path_steps: genSteps,
 
-      generate: function () {
-        GenerateCity(genSteps);
-      },
-      generate1: function () { //match the skybox
-        scene.background = textureCube1;
-      },
-      generate2: function () {
-        scene.background = textureCube2;
-      },
-      generate5: function () {
-        scene.background = textureCube5;
-      },
-      generate7: function () {
-        scene.background = textureCube7;
-      },
-      generate8: function () {
-        scene.background = textureCube8;
-      },
-      generate9: function () {
-        scene.background = textureCube9;
-      },
+     firstPerson: function () {
+          keyboardControls.enabled = !keyboardControls.enabled;
+        },
+
+        generate: function () {
+          GenerateCity(genSteps);
+        },
+        generate1: function () { //match the skybox
+          scene.background = textureCube1;
+        },
+        generate2: function () {
+          scene.background = textureCube2;
+        },
+        generate5: function () {
+          scene.background = textureCube5;
+        },
+        generate7: function () {
+          scene.background = textureCube7;
+        },
+        generate8: function () {
+          scene.background = textureCube8;
+        },
+        generate9: function () {
+          scene.background = textureCube9;
+        },
 
       generate11: function () {
         textureT(1); //match the ground
@@ -584,6 +678,7 @@
       });
 
       selectCheck();
+        
 
       var lightFolder = gui.addFolder('Light Options');
       lightFolder.open();
@@ -626,6 +721,13 @@
 
       var genBtn = generationFolder.add(params, 'generate');
       genBtn.name("Generate New City!");
+
+      //Controller settings, for example whether or not to use first person controls
+      var controlsFolder = gui.addFolder('Control Options');
+      controlsFolder.open();
+      var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
+      ctrlBtnFP.name("First Person Mode");
+
 
       //Skybox
       var generationFolder1 = gui.addFolder('Skybox');
