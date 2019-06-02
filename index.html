@@ -54,12 +54,22 @@
 <body>
   <div id="info-top">
     <h1>Procedural City Generator</h1>
+    <p> <b>Press the "Generate New" button to start!</b> </p>
 
-    Camera Controls:
+    <br>
+
+    <b>Camera Controls</b>
     <ul>
-      <li>Left Click to Rotate</li>
-      <li>Right Click to Pan</li>
+      <li>Left Click + Drag to Rotate</li>
+      <li>Right Click + Drag to Pan</li>
       <li>Scroll Wheel to Zoom</li>
+    </ul>
+
+    <b>Building Controls</b>
+    <ul>
+      <li>Left Click to select</li>
+      <li>Right Click to de-select</li>
+      <li>Left Click again to move the building</li>
     </ul>
   </div>
   <div id="info-bottom">
@@ -109,8 +119,8 @@
     controls.dampingFactor = 1.5;
     camera.position = Pos;
     camera.lookAt(Dir);
-    
-    
+
+
     //move this to the controls section, double check for duplica
     var raycaster = new THREE.Raycaster();
     var selectedObject = new THREE.Mesh();
@@ -119,7 +129,7 @@
     var selectedObjectScale;
     var isSelected = false;
 
-    
+
     function onDocumentMouseDown(event) {
       switch (event.button) {
         case 0: //left
@@ -174,8 +184,8 @@
     }
 
     document.addEventListener('mousedown', onDocumentMouseDown, false);
-    
-    
+
+
     //Lighting Settings
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
     var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
@@ -514,75 +524,66 @@
     var params = {
       selected_building: "empty",
       light_angle: Math.PI / 2,
-      camera_rotate_speed: 1.5,
-      walk_path_steps: 20,
+      camera_rotate_speed: 0,
+      walk_path_steps: genSteps,
+
       generate: function () {
         GenerateCity(genSteps);
-      }
+      },
+      generate1: function () { //match the skybox
+        scene.background = textureCube1;
+      },
+      generate2: function () {
+        scene.background = textureCube2;
+      },
+      generate5: function () {
+        scene.background = textureCube5;
+      },
+      generate7: function () {
+        scene.background = textureCube7;
+      },
+      generate8: function () {
+        scene.background = textureCube8;
+      },
+      generate9: function () {
+        scene.background = textureCube9;
+      },
+
+      generate11: function () {
+        textureT(1); //match the ground
+      },
+      generate22: function () {
+        textureT(2);
+      },
+      generate33: function () {
+        textureT(3);
+      },
+      generate44: function () {
+        textureT(4);
+      },
+      generate55: function () {
+        textureT(5);
+      },
+      generate66: function () {
+        textureT(6);
+      },
+      generate77: function () {
+        textureT(7);
+      },
+      generate88: function () {
+        textureT(8);
+      },
+      generate99: function () {
+        textureT(9);
+      },
     }
 
     function buildGui() {
       gui = new dat.GUI({
         name: "City Options"
       });
-      
+
       selectCheck();
-      
-      var params = {
-        light_angle: Math.PI / 2,
-        camera_rotate_speed: 0,
-        walk_path_steps: genSteps,
-
-        generate: function () {
-          GenerateCity(genSteps);
-        },
-        generate1: function () { //match the skybox
-          scene.background = textureCube1;
-        },
-        generate2: function () {
-          scene.background = textureCube2;
-        },
-        generate5: function () {
-          scene.background = textureCube5;
-        },
-        generate7: function () {
-          scene.background = textureCube7;
-        },
-        generate8: function () {
-          scene.background = textureCube8;
-        },
-        generate9: function () {
-          scene.background = textureCube9;
-        },
-
-        generate11: function () {
-          textureT(1); //match the ground
-        },
-        generate22: function () {
-          textureT(2);
-        },
-        generate33: function () {
-          textureT(3);
-        },
-        generate44: function () {
-          textureT(4);
-        },
-        generate55: function () {
-          textureT(5);
-        },
-        generate66: function () {
-          textureT(6);
-        },
-        generate77: function () {
-          textureT(7);
-        },
-        generate88: function () {
-          textureT(8);
-        },
-        generate99: function () {
-          textureT(9);
-        },
-      }
 
       var lightFolder = gui.addFolder('Light Options');
       lightFolder.open();
@@ -626,36 +627,6 @@
       var genBtn = generationFolder.add(params, 'generate');
       genBtn.name("Generate New City!");
 
-
-    }
-
-    function selectCheck() {
-      if (isSelected == true) {
-        var buildingFolder = gui.addFolder('Building Options');
-        buildingFolder.open();
-
-        var files = [1, 2, 3, 4, 5, 6, 7, 8];
-
-        var buildingController = buildingFolder.add(params, 'selected_building').listen();
-        buildingController.name("Building Options");
-        // console.log(selectedObject);
-        var paramcolor = {
-          color: 0xff00ff
-        };
-        var paramscale = {
-          scale: selectedObjectScale
-        };
-        buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
-          selectedObjectColor.set(paramcolor.color);
-        });
-        buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
-          selectedObject.scale.y = paramscale.scale;
-        });
-
-
-
-      }
-    
       //Skybox
       var generationFolder1 = gui.addFolder('Skybox');
       generationFolder1.open();
@@ -709,6 +680,31 @@
 
       var genBtn99 = generationFolder11.add(params, 'generate99');
       genBtn99.name("Ground9");
+    }
+
+    function selectCheck() {
+      if (isSelected == true) {
+        var buildingFolder = gui.addFolder('Building Options');
+        buildingFolder.open();
+
+        var files = [1, 2, 3, 4, 5, 6, 7, 8];
+
+        var buildingController = buildingFolder.add(params, 'selected_building').listen();
+        buildingController.name("Building Options");
+        // console.log(selectedObject);
+        var paramcolor = {
+          color: 0xff00ff
+        };
+        var paramscale = {
+          scale: selectedObjectScale
+        };
+        buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
+          selectedObjectColor.set(paramcolor.color);
+        });
+        buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
+          selectedObject.scale.y = paramscale.scale;
+        });
+      }
     }
     buildGui();
   </script>
