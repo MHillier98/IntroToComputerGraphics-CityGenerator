@@ -10,6 +10,21 @@
   <script src="js/PLYLoader.js"></script>
   <!--the GUI-->
   <script src="js/dat.gui.min.js"></script>
+  <!--Copy Shader-->
+  <script src="js/CopyShader.js"></script>
+  <!--FXAA Shader-->
+  <script src="js/FXAAShader.js"></script>
+  <!--Effect Composer-->
+  <script src="js/EffectComposer.js"></script>
+  <!--Render Pass-->
+  <script src="js/RenderPass.js"></script>  
+  <!--Shader Pass-->
+  <script src="js/ShaderPass.js"></script>
+  <!--Outline Pass-->
+  <script src="js/OutlinePass.js"></script>
+   
+    
+     
 
   <style>
     body {
@@ -129,6 +144,14 @@
     var selectedObjectScale;
     var isSelected = false;
 
+    var composer, renderPass, outlinePass
+   
+
+    function addSelectedObject(object){
+      selectedObjects = [];
+      selectedObjects.push(object);
+      (console.log('add selected'));
+    }
 
     function onDocumentMouseDown(event) {
       switch (event.button) {
@@ -149,7 +172,28 @@
                 selectedObjectScale = selectedObject.scale.y;
                 // console.log(selectedObjectScale);
                 selectedObject.material.color = new THREE.Color(1, 0.5, 0.5);
-                isSelected = true;
+                 //Outline Pass Stuff
+    composer = new THREE.EffectComposer(renderer);
+    renderPass = new THREE.RenderPass(scene, camera);
+    composer.addPass(renderPass);
+    outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+    outlinePass.edgeStrength = Number(10);
+    outlinePass.edgeGlow = Number(0);
+    outlinePass.edgeThickness = Number(1);
+    outlinePass.pulsePeriod = Number(0);
+    outlinePass.visibleEdgeColor.set( "#ffffff" );
+    outlinePass.hiddenEdgeColor.set( "#000000" );
+    composer.addPass(outlinePass);
+    
+    addSelectedObject(selectedObject);
+                outlinePass.selectedObjects = selectedObject;
+                console.log(outlinePass.selectedObjects);
+                var effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+    effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
+    effectFXAA.renderToScreen = true;
+    composer.addPass(effectFXAA);
+    composer.addPass(outlinePass);
+    isSelected = true;
                 selectCheck();
               }
               if ((intersects[0].object.name != "building") && (isSelected)) {
@@ -487,7 +531,6 @@
 
     CreateScene();
 
-
     //Generator Logic
     var update = function () {
       controls.update();
@@ -629,7 +672,6 @@
 
       //Skybox
       var generationFolder1 = gui.addFolder('Skybox');
-      generationFolder1.open();
 
       var genBtn1 = generationFolder1.add(params, 'generate1');
       genBtn1.name("Sky1");
@@ -652,7 +694,6 @@
 
       //ground
       var generationFolder11 = gui.addFolder('Ground Texture');
-      generationFolder11.open();
 
       var genBtn11 = generationFolder11.add(params, 'generate11');
       genBtn11.name("Ground1");
@@ -707,6 +748,7 @@
       }
     }
     buildGui();
+    
   </script>
 </body>
 
