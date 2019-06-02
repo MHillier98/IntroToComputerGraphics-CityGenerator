@@ -95,6 +95,40 @@
     camera.lookAt(Dir.x, Dir.y, Dir.z);
 
 
+    //create the webgl renderer
+    var renderer = new THREE.WebGLRenderer();
+
+    //set the size of the rendering window
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    //add the renderer to the current document
+    document.body.appendChild(renderer.domElement);
+
+    //Controls
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0;
+    controls.dampingFactor = 1.5;
+    camera.position = Pos;
+    camera.lookAt(Dir);
+
+    //Lighting Settings
+    var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
+    var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+    light.position.y = 1000;
+    light.position.x = 500;
+    light.position.z = 500;
+    light.target.position.set(0, 0, 0);
+    light.castShadow = true;
+    light.shadow.camera.left = -2000;
+    light.shadow.camera.right = 2000;
+    light.shadow.camera.top = 2000;
+    light.shadow.camera.bottom = -2000;
+    light.shadow.camera.far = 4000;
+    var helper = new THREE.CameraHelper(light.shadow.camera);
+
 
     //Skybox
     var r1 = "./assets/skybox/1/";
@@ -199,6 +233,13 @@
       side: THREE.DoubleSide
     });
 
+    //Setup for buildings and roads
+    var buildingLocations = [];
+    var roadLocations = [];
+
+    //Amount of buildings to generate
+    var genSteps = 20;
+
     function textureT(xxx) {
       if (xxx == 1) {
         baseMaterial.map = TextureL1;
@@ -220,9 +261,6 @@
         baseMaterial.map = TextureL9;
       }
     }
-
-
-    var roadLocations = [];
 
     function AddSquareRoad(x, y, z) {
       var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
@@ -261,9 +299,6 @@
         }
       }
     }
-
-
-    var buildingLocations = [];
 
     function AddBuilding(startingX, startingZ, randomX, randomZ) {
       var buildingWidth = 1.5 + (Math.random() * 1);
@@ -372,51 +407,9 @@
       }
     }
 
-    var genSteps = 20;
-
-    GenerateCity(genSteps);
-
-
-    //create the webgl renderer
-    var renderer = new THREE.WebGLRenderer();
-
-    //set the size of the rendering window
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    //add the renderer to the current document
-    document.body.appendChild(renderer.domElement);
-
-    //Controls
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0;
-    controls.dampingFactor = 1.5;
-    camera.position = Pos;
-    camera.lookAt(Dir);
-
-    //Lighting Settings
-    var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
-    var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-    light.position.y = 1000;
-    light.position.x = 500;
-    light.position.z = 500;
-    light.target.position.set(0, 0, 0);
-    light.castShadow = true;
-    light.shadow.camera.left = -2000;
-    light.shadow.camera.right = 2000;
-    light.shadow.camera.top = 2000;
-    light.shadow.camera.bottom = -2000;
-    light.shadow.camera.far = 4000;
-    var helper = new THREE.CameraHelper(light.shadow.camera);
-
-
     function CreateScene() {
       scene.add(ambientLight);
-      //    scene.add(skybox);
       scene.add(light);
-      // scene.add(helper);
     }
 
     CreateScene();
