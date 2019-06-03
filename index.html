@@ -640,21 +640,11 @@
       direction.x = Number(moveLeft) - Number(moveRight);
       direction.y = Number(moveDown) - Number(moveUp);
 
-      // console.log('moveDown', moveDown);
-      // if (moveDown) {
-      //   // direction.y = -1;
-      //   velocity.y -= moveSpeed * delta;
-      // }
-
-      // if (moveUp) {
-      //   // direction.y = 1;
-      //   velocity.y += moveSpeed * delta;
-      // }
       direction.normalize();
 
       if (moveForward || moveBackward) velocity.z -= direction.z * moveSpeed * delta;
       if (moveLeft || moveRight) velocity.x -= direction.x * moveSpeed * delta;
-      if (moveUp || moveDown) velocity.y -= direction.y * moveSpeed * delta;
+      if (moveUp || moveDown) velocity.y -= direction.y * moveSpeed * delta * 0.2;
 
       keyboardControls.getObject().translateX(velocity.x * delta);
       keyboardControls.getObject().translateZ(velocity.z * delta);
@@ -820,10 +810,10 @@
       controlsFolder.open();
       var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
       ctrlBtnFP.name("First Person Mode");
-      var ctrlBtnDay = controlsFolder.add(params, 'day');
-      ctrlBtnDay.name("Set time day");
-      var ctrlBtnNight = controlsFolder.add(params, 'night');
-      ctrlBtnNight.name("Set time night");
+      // var ctrlBtnDay = controlsFolder.add(params, 'day');
+      // ctrlBtnDay.name("Set time day");
+      // var ctrlBtnNight = controlsFolder.add(params, 'night');
+      // ctrlBtnNight.name("Set time night");
 
 
       //Skybox
