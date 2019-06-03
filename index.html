@@ -172,13 +172,16 @@
 
     // });
 
+    var windowWidth = window.innerWidth;
+    blockedWidth = windowWidth - 245;
+
     function onDocumentMouseDown(event) {
       switch (event.button) {
         case 0: //left
           var mouse = new THREE.Vector2;
           mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
           mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
-          if (mouse.x < 0.42) {
+          if (event.clientX < blockedWidth) {
             raycaster.setFromCamera(mouse, camera);
 
             var intersects = raycaster.intersectObjects(scene.children, false);
@@ -673,6 +676,7 @@
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.render(scene, camera);
+      blockedWidth = width - 245;
     };
 
     //Runs the game loop
