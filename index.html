@@ -106,6 +106,8 @@
     var moveUp = false;
     var moveDown = false;
 
+    var firstPersonMode = false;
+
     //set the camera position
     var Pos = new THREE.Vector3(-360, 700, 360);
     camera.position.set(Pos.x, Pos.y, Pos.z);
@@ -492,8 +494,8 @@
           obj.applyMatrix(scale);
 
           obj.position.y = 15;
-          obj.position.x = x * roadSize + 10;
-          obj.position.z = z * roadSize + 10;
+          obj.position.x = x * roadSize + 12;
+          obj.position.z = z * roadSize + 12;
 
           scene.add(obj);
 
@@ -642,8 +644,8 @@
 
       direction.normalize();
 
-      if (moveForward || moveBackward) velocity.z -= direction.z * moveSpeed * delta;
-      if (moveLeft || moveRight) velocity.x -= direction.x * moveSpeed * delta;
+      if (moveForward || moveBackward) velocity.z -= direction.z * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
+      if (moveLeft || moveRight) velocity.x -= direction.x * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
       if (moveUp || moveDown) velocity.y -= direction.y * moveSpeed * delta * 0.2;
 
       keyboardControls.getObject().translateX(velocity.x * delta);
@@ -700,7 +702,7 @@
         camera.position.y = 5;
         camera.position.z = 0;
         controls.target = new THREE.Vector3(10, 5, 0);
-        moveSpeed = 0;
+        firstPersonMode = !firstPersonMode;
         keyboardControls.enabled = !keyboardControls.enabled;
       },
 
