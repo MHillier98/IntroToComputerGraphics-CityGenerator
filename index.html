@@ -149,20 +149,20 @@
     var isSelected = false;
 
 
-    var loader2 = new THREE.ObjectLoader();
-    loader2.load('light-pole.json', function (obj) {
+    // var loader2 = new THREE.ObjectLoader();
+    // loader2.load('light-pole.json', function (obj) {
 
-      var scale = new THREE.Matrix4();
-      scale.makeScale(1.5, 1.5, 1.5)
-      obj.applyMatrix(scale);
+    //   var scale = new THREE.Matrix4();
+    //   scale.makeScale(1.5, 1.5, 1.5)
+    //   obj.applyMatrix(scale);
 
-      obj.position.y = 15;
-      obj.position.x = 10;
-      obj.position.z = 10;
+    //   obj.position.y = 15;
+    //   obj.position.x = 10;
+    //   obj.position.z = 10;
 
-      scene.add(obj);
+    //   scene.add(obj);
 
-    });
+    // });
 
     // var loader = new THREE.GLTFLoader();
 
@@ -481,6 +481,21 @@
           z
         });
 
+        var loader2 = new THREE.ObjectLoader();
+        loader2.load('light-pole.json', function (obj) {
+
+          var scale = new THREE.Matrix4();
+          scale.makeScale(1.5, 1.5, 1.5)
+          obj.applyMatrix(scale);
+
+          obj.position.y = 15;
+          obj.position.x = x * roadSize + 10;
+          obj.position.z = z * roadSize + 10;
+
+          scene.add(obj);
+
+        });
+
         for (var w = 0; w < width; w++) {
           AddSquareRoad((w + x) * roadSize, y, z * roadSize);
         }
@@ -679,6 +694,13 @@
       camera_rotate_speed: 0,
       walk_path_steps: genSteps,
 
+      day: function () {
+        //Make day
+
+      },
+      night: function () {
+        //make night
+      },
       firstPerson: function () {
         camera.position.x = 0;
         camera.position.y = 5;
@@ -794,6 +816,10 @@
       controlsFolder.open();
       var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
       ctrlBtnFP.name("First Person Mode");
+      var ctrlBtnDay = controlsFolder.add(params, 'day');
+      ctrlBtnDay.name("Set time day");
+      var ctrlBtnNight = controlsFolder.add(params, 'night');
+      ctrlBtnNight.name("Set time night");
 
 
       //Skybox
