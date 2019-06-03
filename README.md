@@ -1,7 +1,24 @@
 # UTS 31264 Introduction To Computer Graphics - Final Project
-This project was built as the final project for Introduction to Computer Graphics, in Autumn 2019.
+This city generator was built in [three.js](https://threejs.org/) to explore different graphics techniques and procedural generation. This project was the final project for UTS 31264 Introduction to Computer Graphics, in Autumn 2019.
 
-This is a city generator built in [three.js](https://threejs.org/) to explore different graphics techniques and procedural generation.
+Our project’s aim was to randomly generate a cityscape with a wide range of different variables that effect it’s generation. We wanted variation through building sizes, colours and different models, as well as other aesthetics that would affect our scene, such as lighting, camera positioning, and skybox scenery.
+
+We wanted to provide many different options to the user to control these options, allowing the user to edit the city after it has been generated.
+
+
+![Preview Image](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/blob/master/assets/road/base.png "Preview Image")
+
+
+### Generation
+Procedurally generating a city is harder than one might think, so we decided to go with an algorithm that would generate a path that was easy to work with, while providing enough interesting variations to work well with. We used a variation of a 2D [Random Walk Algorithm](https://en.wikipedia.org/wiki/Random_walk), that would provide a road layout that we could use.
+
+#### Adding Roads
+First, we implemented the ability to add roads onto a  2D plane. Each time the algorithm ‘walks’, it places down a section of road. Each section is made up of several square meshes with a road texture applied. Because of the number of meshes we are adding to our scene, it was necessary to optimise by saving the locations of the sections, and not placing down multiple sections at the same location.
+
+#### Adding Buildings
+We wanted to add buildings in an orderly manner around our roads, with every building having different variables that would be decided before being added. Every time the algorithm ‘walks’, we load one of 8 different building models, and give it a random colour, width, height, and scale. This provides a large amount of variation with what is possible with just 1 model, and the inclusion of 8 models provides a huge number of variations.
+
+
 
 
 ## Development Setup
