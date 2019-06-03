@@ -146,6 +146,12 @@
     var isSelected = false;
 
 
+    var loader = new THREE.JSONLoader();
+    loader.load('light-pole.json', function (geometry, materials) {
+      var lamp = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
+      scene.add(lamp);
+    });
+
     function onDocumentMouseDown(event) {
       switch (event.button) {
         case 0: //left
@@ -767,7 +773,7 @@
 
       //Skybox
       var generationFolder1 = gui.addFolder('Skybox');
-      generationFolder1.open();
+      generationFolder1.close();
 
       var genBtn1 = generationFolder1.add(params, 'generate1');
       genBtn1.name("Sky1");
@@ -790,7 +796,7 @@
 
       //ground
       var generationFolder11 = gui.addFolder('Ground Texture');
-      generationFolder11.open();
+      generationFolder11.close();
 
       var genBtn11 = generationFolder11.add(params, 'generate11');
       genBtn11.name("Ground1");
