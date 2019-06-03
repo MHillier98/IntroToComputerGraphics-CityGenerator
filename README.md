@@ -5,8 +5,10 @@ Our project’s aim was to randomly generate a cityscape with a wide range of di
 
 We wanted to provide many different options to the user to control these options, allowing the user to edit the city after it has been generated.
 
-
 ![Preview Image](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/blob/master/assets/preview%20images/preview.png "Preview Image")
+
+
+---
 
 
 ### Generation
@@ -19,6 +21,7 @@ First, we implemented the ability to add roads onto a  2D plane. Each time the a
 We wanted to add buildings in an orderly manner around our roads, with every building having different variables that would be decided before being added. Every time the algorithm ‘walks’, we load one of 8 different building models, and give it a random colour, width, height, and scale. This provides a large amount of variation with what is possible with just 1 model, and the inclusion of 8 models provides a huge number of variations.
 
 
+---
 
 
 ## Development Setup
@@ -34,6 +37,9 @@ Then go to one of the available addresses to view and use the city builder (thes
 * `http://192.168.43.7:8080/index` 
 * `http://127.0.0.1:8080/index`
 * `http://localhost:8080/index`
+
+
+---
 
 
 ## Group members - Group 10
