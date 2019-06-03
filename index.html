@@ -10,6 +10,7 @@
   <script src="js/PLYLoader.js"></script>
   <!--the GUI-->
   <script src="js/dat.gui.min.js"></script>
+  <script src="js/PointerLockControls.js"></script>
 
   <style>
     body {
@@ -54,12 +55,22 @@
 <body>
   <div id="info-top">
     <h1>Procedural City Generator</h1>
+    <p> <b>Press the "Generate New" button to start!</b> </p>
 
-    Camera Controls:
+    <br>
+
+    <b>Camera Controls</b>
     <ul>
-      <li>Left Click to Rotate</li>
-      <li>Right Click to Pan</li>
+      <li>Left Click + Drag to Rotate</li>
+      <li>Right Click + Drag to Pan</li>
       <li>Scroll Wheel to Zoom</li>
+    </ul>
+
+    <b>Building Controls</b>
+    <ul>
+      <li>Left Click to select</li>
+      <li>Right Click to de-select</li>
+      <li>Left Click again to move the building</li>
     </ul>
   </div>
   <div id="info-bottom">
@@ -82,6 +93,17 @@
 
     var camera = new THREE.PerspectiveCamera(80, ratio, 0.1, 100000);
 
+    var velocity = new THREE.Vector3();
+    var direction = new THREE.Vector3();
+    var prevTime = performance.now();
+
+    var moveForward = false;
+    var moveBackward = false;
+    var moveLeft = false;
+    var moveRight = false;
+    var moveUp = false;
+    var moveDown = false;
+
     //set the camera position
     var Pos = new THREE.Vector3(-360, 700, 360);
     camera.position.set(Pos.x, Pos.y, Pos.z);
@@ -103,23 +125,27 @@
     document.body.appendChild(renderer.domElement);
 
     //Controls
+    keyboardControls = new THREE.PointerLockControls(camera);
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0;
     controls.dampingFactor = 1.5;
     camera.position = Pos;
     camera.lookAt(Dir);
-    
-    
+
+    keyboardControls.enabled = false;
+    scene.add(keyboardControls.getObject());
+
+
     //move this to the controls section, double check for duplica
     var raycaster = new THREE.Raycaster();
     var selectedObject = new THREE.Mesh();
-    selected_building = selectedObject.name;
+	selectedObject.name = "No Building Selected";
     var selectedObjectColor = new THREE.Color();
     var selectedObjectScale;
     var isSelected = false;
 
-    
+
     function onDocumentMouseDown(event) {
       switch (event.button) {
         case 0: //left
@@ -132,17 +158,17 @@
             var intersects = raycaster.intersectObjects(scene.children, false);
 
             if (intersects.length > 0) {
-              if ((intersects[0].object.name == "building") && (!isSelected)) {
+              if ((intersects[0].object.name.includes("building")) && (!isSelected)) {
                 // console.log("Selected!");
                 selectedObject = intersects[0].object;
                 selectedObjectColor = selectedObject.material.color;
                 selectedObjectScale = selectedObject.scale.y;
-                // console.log(selectedObjectScale);
+                //console.log(selectedObject.name);
                 selectedObject.material.color = new THREE.Color(1, 0.5, 0.5);
                 isSelected = true;
                 selectCheck();
               }
-              if ((intersects[0].object.name != "building") && (isSelected)) {
+              if (!(intersects[0].object.name.includes("building")) && (isSelected)) {
                 selectedObject.material.color = selectedObjectColor;
                 var pos = intersects[0].point;
                 // console.log("Placed!");
@@ -174,8 +200,8 @@
     }
 
     document.addEventListener('mousedown', onDocumentMouseDown, false);
-    
-    
+
+
     //Lighting Settings
     var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
     var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
@@ -195,44 +221,44 @@
     //Skybox
     var r1 = "./assets/skybox/1/";
     var urls1 = [r1 + "FieryNebula_front5.jpg", r1 + "FieryNebula_back6.jpg",
-      r1 + "FieryNebula_top3.jpg", r1 + "FieryNebula_bottom4.jpg",
-      r1 + "FieryNebula_left2.jpg", r1 + "FieryNebula_right1.jpg"
+    r1 + "FieryNebula_top3.jpg", r1 + "FieryNebula_bottom4.jpg",
+    r1 + "FieryNebula_left2.jpg", r1 + "FieryNebula_right1.jpg"
     ];
     var textureCube1 = new THREE.CubeTextureLoader().load(urls1);
 
     var r2 = "./assets/skybox/2/";
     var urls2 = [r2 + "px.jpg", r2 + "nx.jpg",
-      r2 + "py.jpg", r2 + "ny.jpg",
-      r2 + "pz.jpg", r2 + "nz.jpg"
+    r2 + "py.jpg", r2 + "ny.jpg",
+    r2 + "pz.jpg", r2 + "nz.jpg"
     ];
     var textureCube2 = new THREE.CubeTextureLoader().load(urls2);
 
     var r5 = "./assets/skybox/5/";
     var urls5 = [r5 + "rt.png", r5 + "lt.png",
-      r5 + "up.png", r5 + "dn.png",
-      r5 + "bk.png", r5 + "ft.png"
+    r5 + "up.png", r5 + "dn.png",
+    r5 + "bk.png", r5 + "ft.png"
     ];
     var textureCube5 = new THREE.CubeTextureLoader().load(urls5);
     scene.background = textureCube5;
 
     var r7 = "./assets/skybox/7/";
     var urls7 = [r7 + "posx.jpg", r7 + "negx.jpg",
-      r7 + "posy.jpg", r7 + "negy.jpg",
-      r7 + "posz.jpg", r7 + "negz.jpg"
+    r7 + "posy.jpg", r7 + "negy.jpg",
+    r7 + "posz.jpg", r7 + "negz.jpg"
     ];
     var textureCube7 = new THREE.CubeTextureLoader().load(urls7);
 
     var r8 = "./assets/skybox/8/";
     var urls8 = [r8 + "px.jpg", r8 + "nx.jpg",
-      r8 + "py.jpg", r8 + "ny.jpg",
-      r8 + "pz.jpg", r8 + "nz.jpg"
+    r8 + "py.jpg", r8 + "ny.jpg",
+    r8 + "pz.jpg", r8 + "nz.jpg"
     ];
     var textureCube8 = new THREE.CubeTextureLoader().load(urls8);
 
     var r9 = "./assets/skybox/9/";
     var urls9 = [r9 + "posx.png", r9 + "negx.png",
-      r9 + "posy.png", r9 + "negy.png",
-      r9 + "posz.png", r9 + "negz.png"
+    r9 + "posy.png", r9 + "negy.png",
+    r9 + "posz.png", r9 + "negz.png"
     ];
     var textureCube9 = new THREE.CubeTextureLoader().load(urls9);
 
@@ -301,6 +327,83 @@
 
     //Amount of buildings to generate
     var genSteps = 20;
+
+    var onKeyDown = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // forward
+        case 87: // w
+          moveForward = true;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = true;
+          break;
+
+        case 40: // backward
+        case 83: // s
+          moveBackward = true;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = true;
+          break;
+
+        // down
+        case 16: // shift
+          moveDown = true;
+          break;
+
+        // up 
+        case 32: // space
+          moveUp = true;
+          break;
+      }
+
+    };
+
+    var onKeyUp = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // forward
+        case 87: // w
+          moveForward = false;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = false;
+          break;
+
+        case 40: // backward
+        case 83: // s
+          moveBackward = false;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = false;
+          break;
+
+        // down
+        case 16: // shift
+          moveDown = false;
+          break;
+
+        // up 
+        case 32: // space
+          moveUp = false;
+          break;
+
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
 
     function textureT(xxx) {
       if (xxx == 1) {
@@ -386,7 +489,7 @@
 
         var baseColor = 0.2 + (Math.random() * 0.8);
         AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() /
-            10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
+          10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
           buildingZ);
       }
     }
@@ -402,7 +505,7 @@
         material.shininess = 100;
         geometry.computeVertexNormals();
         mesh = new THREE.Mesh(geometry, material);
-        mesh.name = "building";
+        mesh.name = "building" + model;
 
         geometry.computeBoundingBox();
 
@@ -481,6 +584,39 @@
     //Generator Logic
     var update = function () {
       controls.update();
+
+      var time = performance.now();
+      var delta = (time - prevTime) / 1000;
+
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+      velocity.y -= velocity.y * 10.0 * delta;
+
+      direction.z = Number(moveForward) - Number(moveBackward);
+      direction.x = Number(moveLeft) - Number(moveRight);
+      direction.y = Number(moveDown) - Number(moveUp);
+
+      // console.log('moveDown', moveDown);
+      // if (moveDown) {
+      //   // direction.y = -1;
+      //   velocity.y -= 4000.0 * delta;
+      // }
+
+      // if (moveUp) {
+      //   // direction.y = 1;
+      //   velocity.y += 4000.0 * delta;
+      // }
+      direction.normalize();
+
+      if (moveForward || moveBackward) velocity.z -= direction.z * 4000.0 * delta;
+      if (moveLeft || moveRight) velocity.x -= direction.x * 4000.0 * delta;
+      if (moveUp || moveDown) velocity.y -= direction.y * 4000.0 * delta;
+
+      keyboardControls.getObject().translateX(velocity.x * delta);
+      keyboardControls.getObject().translateZ(velocity.z * delta);
+      keyboardControls.getObject().translateY(velocity.y * delta);
+
+      prevTime = time;
     };
 
     var render = function () {
@@ -499,7 +635,8 @@
     };
 
     //Runs the game loop
-    var GameLoop = function () {
+    var GameLoop = function () {	
+	  selected_building = selectedObject.name;
       update();
       render();
       requestAnimationFrame(GameLoop);
@@ -512,77 +649,73 @@
 
     var gui;
     var params = {
-      selected_building: "empty",
+      selected_building: 1,
       light_angle: Math.PI / 2,
-      camera_rotate_speed: 1.5,
-      walk_path_steps: 20,
+      camera_rotate_speed: 0,
+      walk_path_steps: genSteps,
+
+      firstPerson: function () {
+        keyboardControls.enabled = !keyboardControls.enabled;
+      },
+
       generate: function () {
         GenerateCity(genSteps);
-      }
+      },
+      generate1: function () { //match the skybox
+        scene.background = textureCube1;
+      },
+      generate2: function () {
+        scene.background = textureCube2;
+      },
+      generate5: function () {
+        scene.background = textureCube5;
+      },
+      generate7: function () {
+        scene.background = textureCube7;
+      },
+      generate8: function () {
+        scene.background = textureCube8;
+      },
+      generate9: function () {
+        scene.background = textureCube9;
+      },
+
+      generate11: function () {
+        textureT(1); //match the ground
+      },
+      generate22: function () {
+        textureT(2);
+      },
+      generate33: function () {
+        textureT(3);
+      },
+      generate44: function () {
+        textureT(4);
+      },
+      generate55: function () {
+        textureT(5);
+      },
+      generate66: function () {
+        textureT(6);
+      },
+      generate77: function () {
+        textureT(7);
+      },
+      generate88: function () {
+        textureT(8);
+      },
+      generate99: function () {
+        textureT(9);
+      },
     }
 
     function buildGui() {
       gui = new dat.GUI({
         name: "City Options"
       });
-      
+
       selectCheck();
-      
-      var params = {
-        light_angle: Math.PI / 2,
-        camera_rotate_speed: 0,
-        walk_path_steps: genSteps,
 
-        generate: function () {
-          GenerateCity(genSteps);
-        },
-        generate1: function () { //match the skybox
-          scene.background = textureCube1;
-        },
-        generate2: function () {
-          scene.background = textureCube2;
-        },
-        generate5: function () {
-          scene.background = textureCube5;
-        },
-        generate7: function () {
-          scene.background = textureCube7;
-        },
-        generate8: function () {
-          scene.background = textureCube8;
-        },
-        generate9: function () {
-          scene.background = textureCube9;
-        },
-
-        generate11: function () {
-          textureT(1); //match the ground
-        },
-        generate22: function () {
-          textureT(2);
-        },
-        generate33: function () {
-          textureT(3);
-        },
-        generate44: function () {
-          textureT(4);
-        },
-        generate55: function () {
-          textureT(5);
-        },
-        generate66: function () {
-          textureT(6);
-        },
-        generate77: function () {
-          textureT(7);
-        },
-        generate88: function () {
-          textureT(8);
-        },
-        generate99: function () {
-          textureT(9);
-        },
-      }
 
       var lightFolder = gui.addFolder('Light Options');
       lightFolder.open();
@@ -626,39 +759,16 @@
       var genBtn = generationFolder.add(params, 'generate');
       genBtn.name("Generate New City!");
 
-
-    }
-
-    function selectCheck() {
-      if (isSelected == true) {
-        var buildingFolder = gui.addFolder('Building Options');
-        buildingFolder.open();
-
-        var files = [1, 2, 3, 4, 5, 6, 7, 8];
-
-        var buildingController = buildingFolder.add(params, 'selected_building').listen();
-        buildingController.name("Building Options");
-        // console.log(selectedObject);
-        var paramcolor = {
-          color: 0xff00ff
-        };
-        var paramscale = {
-          scale: selectedObjectScale
-        };
-        buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
-          selectedObjectColor.set(paramcolor.color);
-        });
-        buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
-          selectedObject.scale.y = paramscale.scale;
-        });
+      //Controller settings, for example whether or not to use first person controls
+      var controlsFolder = gui.addFolder('Control Options');
+      controlsFolder.open();
+      var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
+      ctrlBtnFP.name("First Person Mode");
 
 
-
-      }
-    
       //Skybox
       var generationFolder1 = gui.addFolder('Skybox');
-      generationFolder1.open();
+      //generationFolder1.open();
 
       var genBtn1 = generationFolder1.add(params, 'generate1');
       genBtn1.name("Sky1");
@@ -681,7 +791,7 @@
 
       //ground
       var generationFolder11 = gui.addFolder('Ground Texture');
-      generationFolder11.open();
+      //generationFolder11.open();
 
       var genBtn11 = generationFolder11.add(params, 'generate11');
       genBtn11.name("Ground1");
@@ -709,6 +819,38 @@
 
       var genBtn99 = generationFolder11.add(params, 'generate99');
       genBtn99.name("Ground9");
+    }
+
+	var buildingFolderCreated = false;
+    function selectCheck() {
+      if (isSelected == true && buildingFolderCreated == false) {
+        buildingFolderCreated = true;
+		var buildingFolder = gui.addFolder('Building Options');
+        buildingFolder.open();
+
+        var files = [1, 2, 3, 4, 5, 6, 7, 8];
+
+        var buildingController = buildingFolder.add(params, 'selected_building', files);
+        buildingController.name("Building Options");
+		buildingController.onChange(function (val) {
+		  console.log("test");
+		  AddBuild(val, selectedObject.color.r, selectedObject.color.g, selectedObject.color.b, selectedObject.geometry.parameters.width, selectedObject.geometry.parameters.height, selectedObject.geometry.parameters.depth, selectedObject.position.x, selectedObject.position.y, selectedObject.position.z);
+		  scene.remove(selectedObject.name);
+        });
+        // console.log(selectedObject);
+        var paramcolor = {
+          color: 0xff00ff
+        };
+        var paramscale = {
+          scale: selectedObjectScale
+        };
+        buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
+          selectedObjectColor.set(paramcolor.color);
+        });
+        buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
+          selectedObject.scale.y = paramscale.scale;
+        });
+      }
     }
     buildGui();
   </script>
