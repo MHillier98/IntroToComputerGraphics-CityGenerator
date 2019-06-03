@@ -10,7 +10,7 @@ Our project’s aim was to randomly generate a cityscape with a wide range of di
 
 We wanted to provide many different options to the user to control these options, allowing the user to edit the city after it has been generated.
 
-![Preview Image](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/blob/master/assets/preview%20images/preview.png "Preview Image")
+![Preview Image](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/blob/master/assets/img-preview/preview-full.png "Preview Image")
 
 ---
 
