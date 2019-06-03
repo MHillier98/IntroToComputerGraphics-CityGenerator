@@ -64,6 +64,8 @@
       <li>Left Click + Drag to Rotate</li>
       <li>Right Click + Drag to Pan</li>
       <li>Scroll Wheel to Zoom</li>
+      <li>Space to fly up</li>
+      <li>Left shift to fly down</li>
     </ul>
 
     <b>Building Controls</b>
@@ -125,6 +127,7 @@
     document.body.appendChild(renderer.domElement);
 
     //Controls
+    var moveSpeed = 10;
     keyboardControls = new THREE.PointerLockControls(camera);
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.autoRotate = true;
@@ -146,11 +149,28 @@
     var isSelected = false;
 
 
-    var loader = new THREE.JSONLoader();
-    loader.load('light-pole.json', function (geometry, materials) {
-      var lamp = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(materials));
-      scene.add(lamp);
+    var loader2 = new THREE.ObjectLoader();
+    loader2.load('light-pole.json', function (obj) {
+
+      var scale = new THREE.Matrix4();
+      scale.makeScale(1.5, 1.5, 1.5)
+      obj.applyMatrix(scale);
+
+      obj.position.y = 15;
+      obj.position.x = 10;
+      obj.position.z = 10;
+
+      scene.add(obj);
+
     });
+
+    // var loader = new THREE.GLTFLoader();
+
+    // loader.load('light-pole.json', function (gltf) {
+
+    //   scene.add(gltf);
+
+    // });
 
     function onDocumentMouseDown(event) {
       switch (event.button) {
@@ -588,7 +608,7 @@
 
 
     //Generator Logic
-    var update = function () {
+    var update = function (moveSpeed) {
       controls.update();
 
       var time = performance.now();
@@ -605,18 +625,18 @@
       // console.log('moveDown', moveDown);
       // if (moveDown) {
       //   // direction.y = -1;
-      //   velocity.y -= 4000.0 * delta;
+      //   velocity.y -= moveSpeed * delta;
       // }
 
       // if (moveUp) {
       //   // direction.y = 1;
-      //   velocity.y += 4000.0 * delta;
+      //   velocity.y += moveSpeed * delta;
       // }
       direction.normalize();
 
-      if (moveForward || moveBackward) velocity.z -= direction.z * 4000.0 * delta;
-      if (moveLeft || moveRight) velocity.x -= direction.x * 4000.0 * delta;
-      if (moveUp || moveDown) velocity.y -= direction.y * 4000.0 * delta;
+      if (moveForward || moveBackward) velocity.z -= direction.z * moveSpeed * delta;
+      if (moveLeft || moveRight) velocity.x -= direction.x * moveSpeed * delta;
+      if (moveUp || moveDown) velocity.y -= direction.y * moveSpeed * delta;
 
       keyboardControls.getObject().translateX(velocity.x * delta);
       keyboardControls.getObject().translateZ(velocity.z * delta);
@@ -641,8 +661,8 @@
     };
 
     //Runs the game loop
-    var GameLoop = function () {
-      update();
+    var GameLoop = function (moveSpeed) {
+      update(moveSpeed);
       render();
       requestAnimationFrame(GameLoop);
     }
@@ -660,6 +680,11 @@
       walk_path_steps: genSteps,
 
       firstPerson: function () {
+        camera.position.x = 0;
+        camera.position.y = 5;
+        camera.position.z = 0;
+        controls.target = new THREE.Vector3(10, 5, 0);
+        moveSpeed = 0;
         keyboardControls.enabled = !keyboardControls.enabled;
       },
 
