@@ -76,6 +76,7 @@
     #info-top {
       position: absolute;
       top: 0px;
+      left: 0px;
       width: auto;
       text-align: left;
       padding: 18px;
@@ -86,6 +87,7 @@
     #info-bottom {
       position: absolute;
       bottom: 0px;
+      left: 0px;
       width: auto;
       text-align: left;
       padding: 18px;
@@ -97,7 +99,7 @@
       position: absolute;
       bottom: 0px;
       right: 0px;
-      width: 300px;
+      width: auto;
       text-align: right;
       padding: 18px;
       z-index: 1;
@@ -114,6 +116,7 @@
   <!-- The main information panel, shown in the top-left -->
   <div id="info-top">
     <h1>Procedural City Generator</h1>
+
     <p> <b>Press the "Generate New" button to start!</b> </p>
 
     <br>
@@ -147,9 +150,14 @@
     </ul>
   </div>
 
+  <!--
+    Remove me (and related) before submitting assignment :P
+    Hi to the marker if we forgot \o/
+  -->
   <div id="info-bottom-right">
-    <a class="github-button" href="https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator"
-      data-size="large" aria-label="View on GitHub">View on GitHub</a>
+    <a href="https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator">
+      <img alt="View on Github" src="/assets/img-misc/ViewOnGitHub.png" height="32px">
+    </a>
   </div>
 
   <script>
@@ -216,30 +224,6 @@
     var selectedObjectScale;
     var isSelected = false;
 
-
-    // var loader2 = new THREE.ObjectLoader();
-    // loader2.load('light-pole.json', function (obj) {
-
-    //   var scale = new THREE.Matrix4();
-    //   scale.makeScale(1.5, 1.5, 1.5)
-    //   obj.applyMatrix(scale);
-
-    //   obj.position.y = 15;
-    //   obj.position.x = 10;
-    //   obj.position.z = 10;
-
-    //   scene.add(obj);
-
-    // });
-
-    // var loader = new THREE.GLTFLoader();
-
-    // loader.load('light-pole.json', function (gltf) {
-
-    //   scene.add(gltf);
-
-    // });
-
     var windowWidth = window.innerWidth;
     blockedWidth = windowWidth - 245;
 
@@ -256,11 +240,9 @@
 
             if (intersects.length > 0) {
               if ((intersects[0].object.name == "building") && (!isSelected)) {
-                // console.log("Selected!");
                 selectedObject = intersects[0].object;
                 selectedObjectColor = selectedObject.material.color;
                 selectedObjectScale = selectedObject.scale.y;
-                // console.log(selectedObjectScale);
                 selectedObject.material.color = new THREE.Color(1, 0.5, 0.5);
                 isSelected = true;
                 selectCheck();
@@ -268,14 +250,12 @@
               if ((intersects[0].object.name != "building") && (isSelected)) {
                 selectedObject.material.color = selectedObjectColor;
                 var pos = intersects[0].point;
-                // console.log("Placed!");
                 selectedObject.position.x = pos.x;
                 selectedObject.position.z = pos.z;
                 isSelected = false;
               }
             }
           }
-          // console.log(scene);
           break;
         case 1: //middle
           break;
@@ -284,14 +264,9 @@
           mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
           mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
 
-          raycaster.setFromCamera(mouse, camera);
+          selectedObject.material.color = selectedObjectColor;
+          isSelected = false;
 
-          var intersects = raycaster.intersectObjects(scene.children, false);
-          if ((intersects[0].object.name != "building") && (isSelected)) {
-            selectedObject.material.color = selectedObjectColor;
-            isSelected = false;
-            // console.log('Deselected');
-          }
           break;
       }
     }
@@ -1009,13 +984,14 @@
           'Model 4', 'Model 5', 'Model 6', 'Model 7', 'Model 8'
         ]).listen();
         buildingController.name("Building Model");
-        // console.log(selectedObject);
+
         var paramcolor = {
           color: 0xff00ff
         };
         var paramscale = {
           scale: selectedObjectScale
         };
+        
         buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
           selectedObjectColor.set(paramcolor.color);
         });
