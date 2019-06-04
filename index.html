@@ -51,13 +51,15 @@
   <!-- include the first person controls -->
   <script src="js/PointerLockControls.js"></script>
 
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
   <!-- the styling that our site uses -->
   <style>
     body {
       font: 14px Lucida Grande, sans-serif;
-      text-shadow: #000 2px 2px 10px;
+      text-shadow: #000000 2px 2px 10px;
       color: #ffffff;
-      background-color: #000;
+      background-color: #000000;
       margin: 0px;
       overflow: hidden;
     }
@@ -67,20 +69,36 @@
       height: 100%;
     }
 
+    h1 {
+      margin-top: 0px;
+    }
+
     #info-top {
       position: absolute;
       top: 0px;
-      width: 400px;
+      width: auto;
       text-align: left;
       padding: 18px;
       z-index: 1;
+      background: rgba(44, 44, 44, 0.3);
     }
 
     #info-bottom {
       position: absolute;
       bottom: 0px;
-      width: 300px;
+      width: auto;
       text-align: left;
+      padding: 18px;
+      z-index: 1;
+      background: rgba(44, 44, 44, 0.3);
+    }
+
+    #info-bottom-right {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      width: 300px;
+      text-align: right;
       padding: 18px;
       z-index: 1;
     }
@@ -119,7 +137,7 @@
 
   <!-- The 'Made By' information panel, shown in the bottom-left -->
   <div id="info-bottom">
-    <h3>Made By:</h3>
+    <h1>Made By:</h1>
     <ul>
       <li>Matthew Hillier</li>
       <li>Alex Munoz</li>
@@ -127,6 +145,11 @@
       <li>Longyong Li</li>
       <li>Mitchell Sanderson</li>
     </ul>
+  </div>
+
+  <div id="info-bottom-right">
+    <a class="github-button" href="https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator"
+      data-size="large" aria-label="View on GitHub">View on GitHub</a>
   </div>
 
   <script>
@@ -589,9 +612,55 @@
           buildingZ
         });
 
+        var isWideRand = Math.floor(Math.random() * 30) + 1;
+
+        var wideBuildingWidth = 0;
+        var wideBuildingDepth = 0;
+
+        if (isWideRand < 5) {
+          var freeSpaceAdj = true;
+
+          for (var b = 0; b < buildingLocations.length; b++) {
+            if (buildingLocations[b].buildingX == buildingX + 100 && buildingLocations[b].buildingZ == buildingZ) {
+              freeSpaceAdj = false;
+            }
+          }
+
+          if (freeSpaceAdj) {
+            wideBuildingWidth = buildingWidth;
+            buildingX += 100;
+
+            buildingLocations.push({
+              buildingX,
+              buildingZ
+            });
+            buildingX -= 50;
+          }
+        } else if (isWideRand > 25) {
+          var freeSpaceAdj = true;
+
+          for (var b = 0; b < buildingLocations.length; b++) {
+            if (buildingLocations[b].buildingZ == buildingZ + 100 && buildingLocations[b].buildingX == buildingX) {
+              freeSpaceAdj = false;
+            }
+          }
+
+          if (freeSpaceAdj) {
+            wideBuildingDepth = buildingWidth;
+            buildingZ += 100;
+
+            buildingLocations.push({
+              buildingX,
+              buildingZ
+            });
+            buildingZ -= 50;
+          }
+        }
+
         var baseColor = 0.2 + (Math.random() * 0.8);
         AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() /
-            10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
+            10), baseColor - (Math.random() / 10), buildingWidth + wideBuildingWidth, buildingHeight,
+          buildingWidth + wideBuildingDepth, buildingX, buildingY,
           buildingZ);
       }
     }
