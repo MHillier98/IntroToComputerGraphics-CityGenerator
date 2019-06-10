@@ -141,3 +141,15 @@ baseMesh.rotation.set(Math.PI / 2, 0, 0);
 baseMesh.receiveShadow = true;
 baseMesh.castShadow = false;
 scene.add(baseMesh);
+
+document.getElementById("info-btn").addEventListener("click", function () {
+    var infoBtn = document.getElementById("info-btn");
+    var infoContent = document.getElementById("info-content");
+    if (infoContent.style.display === "none") {
+        infoContent.style.display = "block";
+        infoBtn.innerHTML = "[hide]";
+    } else {
+        infoContent.style.display = "none";
+        infoBtn.innerHTML = "[show]";
+    }
+});

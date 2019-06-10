@@ -1,5 +1,5 @@
 body {
-    font: 12px Lucida Grande, sans-serif;
+    font: 14px Lucida Grande, sans-serif;
     text-shadow: #000000 2px 2px 10px;
     color: #ffffff;
     background-color: #000000;
@@ -33,6 +33,10 @@ a {
     padding: 18px;
     z-index: 1;
     background: rgba(44, 44, 44, 0.3);
+}
+
+#info-btn {
+    float: right;
 }
 
 #info-bottom {

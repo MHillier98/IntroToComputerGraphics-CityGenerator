@@ -42,14 +42,22 @@
   <!-- the styling that our site uses -->
   <link rel="stylesheet" href="style.css">
 
+
   <!-- include the three.js library -->
   <script type="text/javascript" src="js/vendor/three.js"> </script>
+
   <!-- include the trackball code -->
   <script type="text/javascript" src="js/vendor/OrbitControls.js"> </script>
+
   <!-- include the model loader -->
   <script type="text/javascript" src="js/vendor/PLYLoader.js"></script>
+
   <!-- include the GUI -->
   <script type="text/javascript" src="js/vendor/dat.gui.min.js"></script>
+
+  <!-- include performance stats -->
+  <script type="text/javascript" src="js/vendor/stats.min.js"></script>
+
   <!-- include the first person controls -->
   <script type="text/javascript" src="js/vendor/PointerLockControls.js"></script>
 </head>
@@ -59,38 +67,39 @@
   <div id="info-top">
     <h1>Procedural City Generator</h1>
 
-    <p><b>Press the "Generate New" button to start!</b></p>
-    <br>
+    <div id="info-content">
+      <h3>Press the "Generate New" button to start!</h3>
 
-    <b>Camera Controls</b>
-    <ul>
-      <li>Left Click + Drag to Rotate</li>
-      <li>Right Click + Drag to Pan</li>
-      <li>Scroll Wheel to Zoom</li>
-      <li>Space to fly up</li>
-      <li>Left shift to fly down</li>
-    </ul>
+      <h4>Camera Controls</h4>
+      <ul>
+        <li>Left Click + Drag to Rotate</li>
+        <li>Right Click + Drag to Pan</li>
+        <li>Scroll Wheel to Zoom</li>
+        <li>Space to fly up</li>
+        <li>Left shift to fly down</li>
+      </ul>
+  
+      <h4>Building Controls</h4>
+      <ul>
+        <li>Left Click to select</li>
+        <li>Right Click to de-select</li>
+        <li>Left Click again to move the building</li>
+      </ul>
+  
+      <a href="https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/graphs/contributors">
+        <h3>Made By:</h3>
+      </a>
+      <ul>
+        <li>Matthew Hillier</li>
+        <li>Alex Munoz</li>
+        <li>Josh Masangcay</li>
+        <li>Mitchell Sanderson</li>
+        <li>Longyong Li</li>
+      </ul>
+    </div>
 
-    <b>Building Controls</b>
-    <ul>
-      <li>Left Click to select</li>
-      <li>Right Click to de-select</li>
-      <li>Left Click again to move the building</li>
-    </ul>
-  </div>
+    <span id="info-btn" class="btn">[hide]</span>
 
-  <!-- The 'Made By' information panel, shown in the bottom-left -->
-  <div id="info-bottom">
-    <a href="https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/graphs/contributors">
-      <h1>Made By:</h1>
-    </a>
-    <ul>
-      <li>Matthew Hillier</li>
-      <li>Alex Munoz</li>
-      <li>Josh Masangcay</li>
-      <li>Mitchell Sanderson</li>
-      <li>Longyong Li</li>
-    </ul>
   </div>
 
   <!--
@@ -115,6 +124,9 @@
 
   <!-- Handle the Controls GUI -->
   <script type="text/javascript" src="js/gui.js"></script>
+
+  <!-- Show some stats -->
+  <script type="text/javascript" src="js/stats.js"></script>
 
   <!-- Add the main logic -->
   <script type="text/javascript" src="js/main.js"></script>
