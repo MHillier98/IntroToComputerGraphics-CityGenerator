@@ -108,7 +108,7 @@ cameraSpeedController.onChange(function (val) {
 var generationFolder = gui.addFolder('Generation Options');
 generationFolder.open();
 
-var genStepsController = generationFolder.add(params, 'walk_path_steps', 1, 60, 1);
+var genStepsController = generationFolder.add(params, 'walk_path_steps', 1, 50, 1);
 genStepsController.name("Generation Steps");
 genStepsController.onChange(function (val) {
     genSteps = val;

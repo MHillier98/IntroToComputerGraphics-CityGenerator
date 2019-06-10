@@ -75,9 +75,9 @@ function AddRoads(x, y, z, width) {
     }
 }
 
-function AddBuilding(startingX, startingZ, randomX, randomZ) {
+function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
     var buildingWidth = 1.5 + (Math.random() * 1);
-    var buildingHeight = 1.2 + (Math.random() * 1.8);
+    var buildingHeight = 1 + (Math.random() * (stepsLeft / 6));
 
     var buildingX = (startingX + randomX) * 20 * 5;
     var buildingY = (buildingHeight / 2);
@@ -143,7 +143,18 @@ function AddBuilding(startingX, startingZ, randomX, randomZ) {
         }
 
         var baseColor = 0.2 + (Math.random() * 0.8);
-        AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() / 10), baseColor - (Math.random() / 10), buildingWidth + wideBuildingWidth, buildingHeight, buildingWidth + wideBuildingDepth, buildingX, buildingY, buildingZ);
+        AddBuild(
+            Math.floor((Math.random() * 8) + 1),
+            baseColor - (Math.random() / 10),
+            baseColor - (Math.random() / 10),
+            baseColor - (Math.random() / 10),
+            buildingWidth + wideBuildingWidth,
+            buildingHeight,
+            buildingWidth + wideBuildingDepth,
+            buildingX,
+            buildingY,
+            buildingZ
+        );
     }
 }
 
@@ -199,7 +210,7 @@ function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
         [-0.5, -0.5]
     ][Math.random() * 4 | 0];
 
-    AddBuilding(startingX, startingZ, randomBuildingCoords[0], randomBuildingCoords[1]);
+    AddBuilding(startingX, startingZ, randomBuildingCoords[0], randomBuildingCoords[1], stepsLeft);
 
 
     var newStepsLeft = stepsLeft - 1;
