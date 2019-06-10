@@ -145,9 +145,9 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
                 buildingX -= 50;
             }
 
-            AddBuildingBase(buildingX + 50, 0.105, buildingZ);
-            AddBuildingBase(buildingX, 0.105, buildingZ);
-            AddBuildingBase(buildingX - 50, 0.105, buildingZ);
+            AddBuildingBase(buildingX + 50, 1.1, buildingZ);
+            AddBuildingBase(buildingX, 1.1, buildingZ);
+            AddBuildingBase(buildingX - 50, 1.1, buildingZ);
         } else if (isWideRand > 25) {
             var freeSpaceAdj = true;
 
@@ -168,11 +168,11 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
                 buildingZ -= 50;
             }
 
-            AddBuildingBase(buildingX, 0.105, buildingZ - 50);
-            AddBuildingBase(buildingX, 0.105, buildingZ);
-            AddBuildingBase(buildingX, 0.105, buildingZ + 50);
+            AddBuildingBase(buildingX, 1.1, buildingZ - 50);
+            AddBuildingBase(buildingX, 1.1, buildingZ);
+            AddBuildingBase(buildingX, 1.1, buildingZ + 50);
         } else {
-            AddBuildingBase(buildingX, 0.11, buildingZ);
+            AddBuildingBase(buildingX, 1.1, buildingZ);
         }
 
         var baseColor = 0.19 + (Math.random() * 0.81);
@@ -233,7 +233,7 @@ function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
     var newX = startingX + randomRoadCoords[0];
     var newZ = startingZ + randomRoadCoords[1];
 
-    AddRoads(newX * 5, 0.1, newZ * 5, 5);
+    AddRoads(newX * 5, 1, newZ * 5, 5);
 
 
     var randomBuildingCoords = [
