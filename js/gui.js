@@ -3,6 +3,7 @@ var params = {
     selected_building: "empty",
     light_angle: Math.PI / 2,
     camera_rotate_speed: 0,
+    light_increase_speed: 0,
     walk_path_steps: genSteps,
 
     day: function () {
@@ -80,13 +81,23 @@ selectCheck();
 var lightFolder = gui.addFolder('Light Options');
 lightFolder.open();
 
-var lightController = lightFolder.add(params, 'light_angle', 0, Math.PI * 2);
+var lightController = lightFolder.add(params, 'light_angle', 0, Math.PI * 2).listen();;
 lightController.name("Angle");
 lightController.onChange(function (val) {
+    updateLight(val);
+});
+
+function updateLight(val) {
+    if (val >= Math.PI * 2) {
+        val = 0;
+    }
+
+    params.light_angle = val;
     light.position.y = Math.sin(val) * 1000;
     light.position.x = Math.cos(val) * 1000;
     var lightVal = Math.abs(Math.sin(val));
     light.color = new THREE.Color(1, lightVal, lightVal);
+
     if (val >= Math.PI) {
         light.intensity = 0;
         ambientLight.intensity = 0.1;
@@ -94,13 +105,23 @@ lightController.onChange(function (val) {
         light.intensity = 0.25 + 0.25 * lightVal;
         ambientLight.intensity = 0.1 + 0.2 * lightVal;
     }
+}
+
+var lightIncreaseSpeedController = lightFolder.add(params, 'light_increase_speed', 0, 10, 0.1).listen();;
+lightIncreaseSpeedController.name("Light Increase Speed");
+lightIncreaseSpeedController.onChange(function (val) {
+    params.light_increase_speed = val;
 });
+
+window.setInterval(function () {
+    updateLight(params.light_angle + (params.light_increase_speed/100));
+}, 30);
 
 var cameraFolder = gui.addFolder('Camera Options');
 cameraFolder.open();
 
 var cameraSpeedController = cameraFolder.add(params, 'camera_rotate_speed', 0, 5, 0.1);
-cameraSpeedController.name("Rotate Speed");
+cameraSpeedController.name("Camera Rotation Speed");
 cameraSpeedController.onChange(function (val) {
     controls.autoRotateSpeed = val;
 });
@@ -115,7 +136,7 @@ genStepsController.onChange(function (val) {
 });
 
 var genBtn = generationFolder.add(params, 'generate');
-genBtn.name("Generate New City!");
+genBtn.name("Generate New City");
 
 //Controller settings, for example whether or not to use first person controls
 // TODO: FIX THIS!

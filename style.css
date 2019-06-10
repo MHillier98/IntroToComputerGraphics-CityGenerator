@@ -55,3 +55,11 @@ a {
     padding: 18px;
     z-index: 1;
 }
+
+.dg.main.a {
+    width: 330px !important;
+}
+
+.close-button {
+    width: 330px !important;
+}

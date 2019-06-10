@@ -6,6 +6,13 @@ var roadMaterial = new THREE.MeshPhongMaterial({
     side: THREE.DoubleSide
 });
 
+var buildingBaseSize = 80;
+var buildingBaseGeometry = new THREE.PlaneGeometry(buildingBaseSize, buildingBaseSize);
+var buildingBaseMaterial = new THREE.MeshPhongMaterial({
+    map: new THREE.TextureLoader().load("./assets/road/building_base.jpg"),
+    side: THREE.DoubleSide
+});
+
 //Setup for buildings and roads
 var buildingLocations = [];
 var roadLocations = [];
@@ -26,6 +33,19 @@ function AddSquareRoad(x, y, z) {
     scene.add(roadMesh);
 }
 
+function AddBuildingBase(x, y, z) {
+    var buildingBaseMesh = new THREE.Mesh(buildingBaseGeometry, buildingBaseMaterial);
+    buildingBaseMesh.receiveShadow = true;
+    buildingBaseMesh.castShadow = false;
+
+    buildingBaseMesh.position.y = y;
+    buildingBaseMesh.position.z = z;
+    buildingBaseMesh.position.x = x;
+    buildingBaseMesh.rotation.set(Math.PI / 2, 0, 0);
+
+    scene.add(buildingBaseMesh);
+}
+
 function AddRoads(x, y, z, width) {
     var freeSpace = true;
 
@@ -41,30 +61,7 @@ function AddRoads(x, y, z, width) {
             z
         });
 
-        var loader2 = new THREE.ObjectLoader();
-        loader2.load('./assets/lightpole/light-pole.json', function (obj) {
-
-            var combined = new THREE.Matrix4();
-            var scale = new THREE.Matrix4();
-            scale.makeScale(1, 1, 1);
-            combined.multiply(scale);
-
-            var rot = new THREE.Matrix4();
-            rot.makeRotationY(Math.PI / -2);
-            if (Math.round(Math.random()) == 0) {
-                rot.makeRotationY(Math.PI);
-            }
-            combined.multiply(rot);
-
-            obj.applyMatrix(combined);
-            obj.mesh
-            obj.position.y = 12;
-            obj.position.x = x * roadSize + 12;
-            obj.position.z = z * roadSize + 12;
-
-            scene.add(obj);
-
-        });
+        AddLightPole(x, y, z);
 
         for (var w = 0; w < width; w++) {
             AddSquareRoad((w + x) * roadSize, y, z * roadSize);
@@ -74,6 +71,31 @@ function AddRoads(x, y, z, width) {
             AddSquareRoad(x * roadSize, y, (q + z) * roadSize);
         }
     }
+}
+
+function AddLightPole(x, y, z) {
+    var loader = new THREE.ObjectLoader();
+    loader.load('./assets/lightpole/light-pole.json', function (obj) {
+        var combined = new THREE.Matrix4();
+        var scale = new THREE.Matrix4();
+        scale.makeScale(1, 1, 1);
+        combined.multiply(scale);
+
+        var rot = new THREE.Matrix4();
+        rot.makeRotationY(Math.PI / -2);
+        if (Math.round(Math.random()) == 0) {
+            rot.makeRotationY(Math.PI);
+        }
+        combined.multiply(rot);
+
+        obj.applyMatrix(combined);
+        obj.mesh
+        obj.position.y = y + 11;
+        obj.position.x = x * roadSize + 12;
+        obj.position.z = z * roadSize + 12;
+
+        scene.add(obj);
+    });
 }
 
 function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
@@ -122,6 +144,10 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
                 });
                 buildingX -= 50;
             }
+
+            AddBuildingBase(buildingX + 50, 0.105, buildingZ);
+            AddBuildingBase(buildingX, 0.105, buildingZ);
+            AddBuildingBase(buildingX - 50, 0.105, buildingZ);
         } else if (isWideRand > 25) {
             var freeSpaceAdj = true;
 
@@ -141,9 +167,15 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
                 });
                 buildingZ -= 50;
             }
+
+            AddBuildingBase(buildingX, 0.105, buildingZ - 50);
+            AddBuildingBase(buildingX, 0.105, buildingZ);
+            AddBuildingBase(buildingX, 0.105, buildingZ + 50);
+        } else {
+            AddBuildingBase(buildingX, 0.11, buildingZ);
         }
 
-        var baseColor = 0.2 + (Math.random() * 0.8);
+        var baseColor = 0.19 + (Math.random() * 0.81);
         AddBuild(
             Math.floor((Math.random() * 8) + 1),
             baseColor - (Math.random() / 10),
@@ -201,7 +233,7 @@ function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
     var newX = startingX + randomRoadCoords[0];
     var newZ = startingZ + randomRoadCoords[1];
 
-    AddRoads(newX * 5, 1, newZ * 5, 5);
+    AddRoads(newX * 5, 0.1, newZ * 5, 5);
 
 
     var randomBuildingCoords = [
