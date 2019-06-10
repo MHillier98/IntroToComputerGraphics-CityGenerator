@@ -114,7 +114,7 @@ lightIncreaseSpeedController.onChange(function (val) {
 });
 
 window.setInterval(function () {
-    updateLight(params.light_angle + (params.light_increase_speed/100));
+    updateLight(params.light_angle + (params.light_increase_speed / 100));
 }, 30);
 
 var cameraFolder = gui.addFolder('Camera Options');
