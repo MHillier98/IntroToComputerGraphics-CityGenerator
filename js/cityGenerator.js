@@ -49,11 +49,12 @@ function AddRoads(x, y, z, width) {
             scale.makeScale(1, 1, 1);
             combined.multiply(scale);
 
+            var rot = new THREE.Matrix4();
+            rot.makeRotationY(Math.PI / -2);
             if (Math.round(Math.random()) == 0) {
-                var rot = new THREE.Matrix4();
-                rot.makeRotationY(Math.PI / 2);
-                combined.multiply(rot);
+                rot.makeRotationY(Math.PI);
             }
+            combined.multiply(rot);
 
             obj.applyMatrix(combined);
             obj.mesh
