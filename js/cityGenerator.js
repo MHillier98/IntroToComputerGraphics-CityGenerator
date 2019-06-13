@@ -177,7 +177,7 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
 
         var baseColor = 0.19 + (Math.random() * 0.81);
         AddBuild(
-            Math.floor((Math.random() * 8) + 1),
+            Math.floor((Math.random() * 15) + 1),
             baseColor - (Math.random() / 10),
             baseColor - (Math.random() / 10),
             baseColor - (Math.random() / 10),
