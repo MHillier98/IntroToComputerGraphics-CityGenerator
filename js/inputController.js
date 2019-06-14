@@ -37,7 +37,7 @@ function onDocumentMouseDown(event) {
                         selectedObject = intersects[0].object;
 
                         if (selectedObject.material.color[0] === NaN) {
-                            selectedObjectColor = [255, 255, 255];
+                            selectedObjectColor = [255, 0, 255];
                         } else {
                             selectedObjectColor = [selectedObject.material.color.r * 255, selectedObject.material.color.g * 255, selectedObject.material.color.b * 255];
                         }
@@ -48,11 +48,18 @@ function onDocumentMouseDown(event) {
                         selectCheck();
                     }
                     if ((intersects[0].object.name != "building") && (isSelected)) {
-                        selectedObject.material.color = selectedObjectColor;
+                        // selectedObject.material.color = selectedObjectColor;
                         var pos = intersects[0].point;
                         selectedObject.position.x = pos.x;
                         selectedObject.position.z = pos.z;
+
                         isSelected = false;
+
+                        if (buildingFolder !== null) {
+                            buildingFolder.remove(buildingController);
+                            buildingFolder.remove(colourPicker);
+                            buildingFolder.remove(scalePicker);
+                        }
                     }
                 }
             }

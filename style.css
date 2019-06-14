@@ -12,19 +12,7 @@ canvas {
     height: 100%;
 }
 
-h1 {
-    margin-top: 0px;
-}
-
-ul {
-    list-style-type: square;
-}
-
-a {
-    color: #ffffff;
-}
-
-#info-top {
+#info-panel {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -35,19 +23,24 @@ a {
     background: rgba(44, 44, 44, 0.4);
 }
 
+h1 {
+    margin-top: 0px;
+}
+
+ul {
+    list-style-type: square;
+}
+
 #info-btn {
     float: right;
 }
 
-#info-bottom {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-    width: auto;
-    text-align: left;
-    padding: 18px;
-    z-index: 1;
-    background: rgba(44, 44, 44, 0.4);
+.dg.main.a {
+    width: 330px !important;
+}
+
+.close-button {
+    width: 330px !important;
 }
 
 #info-bottom-right {
@@ -58,12 +51,4 @@ a {
     text-align: right;
     padding: 18px;
     z-index: 1;
-}
-
-.dg.main.a {
-    width: 330px !important;
-}
-
-.close-button {
-    width: 330px !important;
 }
