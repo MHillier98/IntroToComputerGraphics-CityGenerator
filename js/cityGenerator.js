@@ -176,18 +176,35 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
         }
 
         var baseColor = 0.19 + (Math.random() * 0.81);
-        AddBuild(
-            Math.floor((Math.random() * 15) + 1),
-            baseColor - (Math.random() / 10),
-            baseColor - (Math.random() / 10),
-            baseColor - (Math.random() / 10),
-            buildingWidth + wideBuildingWidth,
-            buildingHeight,
-            buildingWidth + wideBuildingDepth,
-            buildingX,
-            buildingY,
-            buildingZ
-        );
+
+        var randBuilding = Math.floor((Math.random() * 100) + 1);
+        if (randBuilding < 75) { // 75% of the time a tall building will be chosen
+            AddBuild(
+                Math.floor((Math.random() * 8) + 1),
+                baseColor - (Math.random() / 10),
+                baseColor - (Math.random() / 10),
+                baseColor - (Math.random() / 10),
+                buildingWidth + wideBuildingWidth,
+                buildingHeight,
+                buildingWidth + wideBuildingDepth,
+                buildingX,
+                buildingY,
+                buildingZ
+            );
+        } else {
+            AddBuild(
+                Math.floor((Math.random() * 5) + 9),
+                baseColor - (Math.random() / 10),
+                baseColor - (Math.random() / 10),
+                baseColor - (Math.random() / 10),
+                buildingWidth + wideBuildingWidth,
+                buildingHeight,
+                buildingWidth + wideBuildingDepth,
+                buildingX,
+                buildingY,
+                buildingZ
+            );
+        }
     }
 }
 
@@ -209,9 +226,9 @@ function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
         var sca = new THREE.Matrix4();
         var combined = new THREE.Matrix4();
         if (model > 8) {
-	sca.makeScale(4 * size.length() * width, 4 * size.length() * height, 4 * size.length() * depth);
+            sca.makeScale(4 * size.length() * width, 4 * size.length() * height, 4 * size.length() * depth);
         } else {
-	sca.makeScale(2 * size.length() * width, 2 * size.length() * height, 2 * size.length() * depth);
+            sca.makeScale(2 * size.length() * width, 2 * size.length() * height, 2 * size.length() * depth);
         }
         combined.multiply(sca);
         mesh.applyMatrix(combined);
