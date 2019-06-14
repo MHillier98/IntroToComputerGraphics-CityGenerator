@@ -23,17 +23,22 @@ var params = {
 
     firstPerson: function () {
         controls.reset();
-        camera.position.x = 0;
-        camera.position.y = 4;
-        camera.position.z = 13;
-
-        camera.rotation.y = 90 * Math.PI / 180;
-        keyboardControls.getObject().position.set(0, 4, 13);
-        controls.update();
-        camera.updateProjectionMatrix();
 
         firstPersonMode = !firstPersonMode;
         keyboardControls.enabled = !keyboardControls.enabled;
+
+        if (!firstPersonMode) {
+            var Pos = new THREE.Vector3(-360, 700, 360);
+            camera.position.set(Pos.x, Pos.y, Pos.z);
+        } else {
+            var Pos = new THREE.Vector3(0, 4, 13);
+            camera.position.set(Pos.x, Pos.y, Pos.z);
+            camera.rotation.y = 90 * Math.PI / 180;
+            keyboardControls.getObject().position.set(0, 4, 13);
+        }
+
+        controls.update();
+        camera.updateProjectionMatrix();
     },
 
     generate1: function () { //match the skybox
