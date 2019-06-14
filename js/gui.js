@@ -1,17 +1,26 @@
-var gui;
+var gui = new dat.GUI({
+    name: "City Options"
+});
+
 var params = {
     selected_building: "empty",
-    light_angle: (Math.PI / 2) + 0.2,
-    camera_rotate_speed: 0,
-    light_increase_speed: 0,
-    walk_path_steps: genSteps,
 
+    light_angle: (Math.PI / 2) + 0.2,
+    light_increase_speed: 0,
     day: function () {
-        //Make day
+        params.light_angle = 1.8;
     },
     night: function () {
-        //make night
+        params.light_angle = 4.4;
     },
+
+    camera_rotate_speed: 0,
+
+    walk_path_steps: genSteps,
+    generate: function () {
+        GenerateCity(genSteps);
+    },
+
     firstPerson: function () {
         controls.reset();
         camera.position.x = 0;
@@ -19,14 +28,7 @@ var params = {
         camera.position.z = 13;
 
         camera.rotation.y = 90 * Math.PI / 180;
-        // camera.rotation.x = 90 * Math.PI / 180;
-        // camera.rotation.z = 90 * Math.PI / 180;
-
-        // camera.up.set(0, 0, 1);
-        // camera.lookAt(100, 100, 100);
-        // camera.target.position.y = 12
         keyboardControls.getObject().position.set(0, 4, 13);
-        // controls = new THREE.PointerLockControls(camera);
         controls.update();
         camera.updateProjectionMatrix();
 
@@ -34,9 +36,6 @@ var params = {
         keyboardControls.enabled = !keyboardControls.enabled;
     },
 
-    generate: function () {
-        GenerateCity(genSteps);
-    },
     generate1: function () { //match the skybox
         scene.background = textureCube1;
     },
@@ -85,11 +84,6 @@ var params = {
     },
 }
 
-gui = new dat.GUI({
-    name: "City Options"
-});
-
-selectCheck();
 
 var lightFolder = gui.addFolder('Light Options');
 lightFolder.open();
@@ -131,6 +125,13 @@ window.setInterval(function () {
     updateLight(params.light_angle + (params.light_increase_speed / 100));
 }, 30);
 
+var ctrlBtnDay = lightFolder.add(params, 'day');
+ctrlBtnDay.name("Set Time to Day");
+
+var ctrlBtnNight = lightFolder.add(params, 'night');
+ctrlBtnNight.name("Set Time to Night");
+
+
 var cameraFolder = gui.addFolder('Camera Options');
 cameraFolder.open();
 
@@ -139,6 +140,7 @@ cameraSpeedController.name("Camera Rotation Speed");
 cameraSpeedController.onChange(function (val) {
     controls.autoRotateSpeed = val;
 });
+
 
 var generationFolder = gui.addFolder('Generation Options');
 generationFolder.open();
@@ -152,15 +154,13 @@ genStepsController.onChange(function (val) {
 var genBtn = generationFolder.add(params, 'generate');
 genBtn.name("Generate New City");
 
+
 //Controller settings, for example whether or not to use first person controls
 var controlsFolder = gui.addFolder('Control Options');
 controlsFolder.open();
+
 var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
 ctrlBtnFP.name("First Person Mode");
-// var ctrlBtnDay = controlsFolder.add(params, 'day');
-// ctrlBtnDay.name("Set time day");
-// var ctrlBtnNight = controlsFolder.add(params, 'night');
-// ctrlBtnNight.name("Set time night");
 
 
 //Skybox

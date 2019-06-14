@@ -26,22 +26,14 @@ var update = function () {
 
     direction.normalize();
 
-    // console.log('delta', delta);
     if (moveForward || moveBackward) {
         velocity.z -= direction.z * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
-        console.log('velocity.z :', velocity.z);
-        // console.log('direction.z :', direction.z);
     }
     if (moveLeft || moveRight) {
         velocity.x -= direction.x * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
-        console.log('velocity.x :', velocity.x);
-        // console.log('direction.x :', direction.x);
-
     }
     if (moveUp || moveDown) {
         velocity.y -= direction.y * moveSpeed * delta * 0.2;
-        console.log('velocity.y :', velocity.y);
-        // console.log('direction.y :', direction.y);
     }
 
     keyboardControls.getObject().translateX(velocity.x * delta);
