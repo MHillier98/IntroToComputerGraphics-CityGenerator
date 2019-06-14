@@ -156,9 +156,9 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
                     buildingX -= 50;
                 }
 
-                AddBuildingBase(buildingX + 50, 1.1, buildingZ);
-                AddBuildingBase(buildingX, 1.1, buildingZ);
-                AddBuildingBase(buildingX - 50, 1.1, buildingZ);
+                AddBuildingBase(buildingX + 50, 1.0084, buildingZ);
+                AddBuildingBase(buildingX, 1.0084, buildingZ);
+                AddBuildingBase(buildingX - 50, 1.0084, buildingZ);
             } else if (isWideRand > 25) {
                 var freeSpaceAdj = true;
 
@@ -179,11 +179,11 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
                     buildingZ -= 50;
                 }
 
-                AddBuildingBase(buildingX, 1.1, buildingZ - 50);
-                AddBuildingBase(buildingX, 1.1, buildingZ);
-                AddBuildingBase(buildingX, 1.1, buildingZ + 50);
+                AddBuildingBase(buildingX, 1.0084, buildingZ - 50);
+                AddBuildingBase(buildingX, 1.0084, buildingZ);
+                AddBuildingBase(buildingX, 1.0084, buildingZ + 50);
             } else {
-                AddBuildingBase(buildingX, 1.1, buildingZ);
+                AddBuildingBase(buildingX, 1.0084, buildingZ);
             }
 
 
@@ -200,7 +200,7 @@ function AddBuilding(startingX, startingZ, randomX, randomZ, stepsLeft) {
                 buildingZ
             );
         } else { // don't make a smaller building double width
-            AddBuildingBase(buildingX, 1.1, buildingZ);
+            AddBuildingBase(buildingX, 1.0084, buildingZ);
             AddBuild(
                 Math.floor((Math.random() * 5) + 9),
                 baseColor - (Math.random() / 10),

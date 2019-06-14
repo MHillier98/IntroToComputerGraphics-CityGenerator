@@ -1,7 +1,7 @@
 var gui;
 var params = {
     selected_building: "empty",
-    light_angle: Math.PI / 2,
+    light_angle: (Math.PI / 2) + 0.2,
     camera_rotate_speed: 0,
     light_increase_speed: 0,
     walk_path_steps: genSteps,
