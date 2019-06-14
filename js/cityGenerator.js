@@ -224,7 +224,7 @@ function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
     loader.load('assets/building_models/b' + model + '.ply', function (geometry) {
         var material = new THREE.MeshPhongMaterial();
         material.color = new THREE.Color(r, g, b);
-        material.shininess = 100;
+        material.shininess = 50;
         geometry.computeVertexNormals();
         mesh = new THREE.Mesh(geometry, material);
         mesh.name = "building";

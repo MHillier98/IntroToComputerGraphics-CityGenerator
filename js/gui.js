@@ -100,6 +100,7 @@ lightController.onChange(function (val) {
     updateLight(val);
 });
 
+// Update the position, intensity, and colour of the light sources based on the angle given
 function updateLight(val) {
     if (val >= Math.PI * 2) {
         val = 0;
