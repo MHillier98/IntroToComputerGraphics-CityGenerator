@@ -10,6 +10,11 @@ Our project’s aim was to randomly generate a cityscape with a wide range of di
 
 ---
 
+## Demonstration Video
+A short overview video of our project is available on Youtube: https://www.youtube.com/watch?v=k7xkfOuArYo
+
+---
+
 ## Generation
 Procedurally generating a city is harder than one might think, so we decided to go with an algorithm that would generate a path that was easy to work with, while providing enough interesting variations to work well with. We used a variation of a 2D [Random Walk Algorithm](https://en.wikipedia.org/wiki/Random_walk), that would provide a road layout that we could use.
 
