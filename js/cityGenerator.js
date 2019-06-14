@@ -208,8 +208,11 @@ function AddBuild(model, r, g, b, width, height, depth, xTra, yTra, zTra) {
         var size = geometry.boundingBox.getSize();
         var sca = new THREE.Matrix4();
         var combined = new THREE.Matrix4();
-        sca.makeScale(2 * size.length() * width, 2 * size.length() * height, 2 * size.length() * depth);
-
+        if (model > 8) {
+	sca.makeScale(4 * size.length() * width, 4 * size.length() * height, 4 * size.length() * depth);
+        } else {
+	sca.makeScale(2 * size.length() * width, 2 * size.length() * height, 2 * size.length() * depth);
+        }
         combined.multiply(sca);
         mesh.applyMatrix(combined);
         mesh.castShadow = true;
