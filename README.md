@@ -2,13 +2,11 @@
 
 Currently being hosted at: https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/
 
----
+![Preview Image](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/blob/master/assets/img-preview/preview-full.png "Preview Image")
 
 This city generator was built in [three.js](https://threejs.org/) to explore different graphics techniques and procedural generation. This project was the final project for UTS 31264 Introduction to Computer Graphics, in Autumn 2019.
 
 Our project’s aim was to randomly generate a cityscape with a wide range of different variables that effect it’s generation. We wanted variation through building sizes, colours and different models, as well as other aesthetics that would affect our scene, such as lighting, camera positioning, and skybox scenery. We wanted to provide many different options to the user to control these options, allowing the user to edit the city after it has been generated.
-
-![Preview Image](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/blob/master/assets/img-preview/preview-full.png "Preview Image")
 
 ---
 
