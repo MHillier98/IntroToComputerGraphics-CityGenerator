@@ -1,63 +1,185 @@
-<!--
-  SOURCES + INSPIRATIONS
-  https://en.wikipedia.org/wiki/Random_walk
-  https://github.com/mrdoob/three.js/blob/master/examples/webgl_postprocessing_outline.html#L338
--->
-
-
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#">
 
 <head>
+  <!-- HTML Meta Tags -->
   <title>Procedural City Generator</title>
-</head>
+  <meta name="description"
+    content="A Procedural City Generator built in Three.JS - The Final Project for UTS 31264 Introduction To Computer Graphics">
+  <link rel="image_src"
+    href="https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/assets/img-preview/preview.png">
 
-<style>
-  body {
-    margin: 0;
-  }
+  <!-- set the favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-  canvas {
-    width: 100%;
-    height: 100%;
-  }
-</style>
+  <!-- set some meta tags -->
+  <meta itemprop="name" content="Procedural City Generator">
+  <meta itemprop="description" content="A Procedural City Generator built in Three.JS
+  The Final Project for UTS 31264 Introduction To Computer Graphics">
+  <meta itemprop="image"
+    content="https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/assets/img-preview/preview.png">
 
-<body>
-  <!--include the three.js library-->
+  <meta property="og:url" content="https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Procedural City Generator">
+  <meta property="og:description"
+    content="A Procedural City Generator built in Three.JS - The Final Project for UTS 31264 Introduction To Computer Graphics">
+  <meta property="ogimage:"
+    content="https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/assets/img-preview/preview.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/">
+  <meta name="twitter:title" content="Procedural City Generator">
+  <meta name="twitter:description"
+    content="A Procedural City Generator built in Three.JS - The Final Project for UTS 31264 Introduction To Computer Graphics">
+  <meta name="twitter:image"
+    content="https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/assets/img-preview/preview.png">
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+
+  <!-- include the three.js library -->
   <script src="js/three.js"> </script>
-  <!--and the trackball code-->
+  <script src="js/Lensflare.js"> </script>
+  <!-- include the trackball code -->
   <script src="js/OrbitControls.js"> </script>
-  <!--the model loader-->
+  <!-- include the model loader -->
   <script src="js/PLYLoader.js"></script>
-  <!--the GUI-->
+  <!-- include the GUI -->
   <script src="js/dat.gui.min.js"></script>
+  <!-- include the first person controls -->
+  <script src="js/PointerLockControls.js"></script>
 
+  <!-- the styling that our site uses -->
   <style>
     body {
-      font-family: Monospace;
-      background-color: #000;
-      color: #fff;
+      font: 14px Lucida Grande, sans-serif;
+      text-shadow: #000000 2px 2px 10px;
+      color: #ffffff;
+      background-color: #000000;
       margin: 0px;
       overflow: hidden;
     }
 
-    #info {
-      position: absolute;
-      top: 10px;
+    canvas {
       width: 100%;
-      text-align: center;
+      height: 100%;
+    }
+
+    h1 {
+      margin-top: 0px;
+    }
+
+    #info-top {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: auto;
+      text-align: left;
+      padding: 18px;
+      z-index: 1;
+      background: rgba(44, 44, 44, 0.3);
+    }
+
+    #info-bottom {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      width: auto;
+      text-align: left;
+      padding: 18px;
+      z-index: 1;
+      background: rgba(44, 44, 44, 0.3);
+    }
+
+    #info-bottom-right {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      width: auto;
+      text-align: right;
+      padding: 18px;
+      z-index: 1;
+    }
+
+    ul {
+      list-style-type: square;
     }
   </style>
 
-  <div id="info">
+</head>
+
+<body>
+  <!-- The main information panel, shown in the top-left -->
+  <div id="info-top">
+    <h1>Procedural City Generator</h1>
+
+    <p> <b>Press the "Generate New" button to start!</b> </p>
+
+    <br>
+
+    <b>Camera Controls</b>
+    <ul>
+      <li>Left Click + Drag to Rotate</li>
+      <li>Right Click + Drag to Pan</li>
+      <li>Scroll Wheel to Zoom</li>
+      <li>Space to fly up</li>
+      <li>Left shift to fly down</li>
+    </ul>
+
+    <b>Building Controls</b>
+    <ul>
+      <li>Left Click to select</li>
+      <li>Right Click to de-select</li>
+      <li>Left Click again to move the building</li>
+    </ul>
   </div>
+
+  <!-- The 'Made By' information panel, shown in the bottom-left -->
+  <div id="info-bottom">
+    <h1>Made By:</h1>
+    <ul>
+      <li>Matthew Hillier</li>
+      <li>Alex Munoz</li>
+      <li>Josh Masangcay</li>
+      <li>Longyong Li</li>
+      <li>Mitchell Sanderson</li>
+    </ul>
+  </div>
+
+  <!--
+    Remove me (and related) before submitting assignment :P
+    Hi to the marker if we forgot \o/
+  -->
+  <div id="info-bottom-right">
+    <a href="https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator">
+      <img alt="View on Github" src="https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/assets/img-misc/ViewOnGitHub.png" height="32px">
+    </a>
+  </div>
+
   <script>
     //create the scene
     var scene = new THREE.Scene();
     var ratio = window.innerWidth / window.innerHeight;
     //create the perspective camera
     //for parameters see https://threejs.org/docs/#api/cameras/PerspectiveCamera
-    var camera = new THREE.PerspectiveCamera(80, ratio, 0.1, 100000);
+
+    var camera = new THREE.PerspectiveCamera(80, ratio, 4, 100000);
+
+    var velocity = new THREE.Vector3();
+    var direction = new THREE.Vector3();
+    var prevTime = performance.now();
+
+    var moveForward = false;
+    var moveBackward = false;
+    var moveLeft = false;
+    var moveRight = false;
+    var moveUp = false;
+    var moveDown = false;
+
+    var firstPersonMode = false;
 
     //set the camera position
     var Pos = new THREE.Vector3(-360, 700, 360);
@@ -67,70 +189,431 @@
     var Dir = new THREE.Vector3(0, 0, 0);
     camera.lookAt(Dir.x, Dir.y, Dir.z);
 
+
+    //create the webgl renderer
+    var renderer = new THREE.WebGLRenderer();
+
+    //set the size of the rendering window
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    //add the renderer to the current document
+    document.body.appendChild(renderer.domElement);
+
+    //Controls
+    var moveSpeed = 10;
+    keyboardControls = new THREE.PointerLockControls(camera);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0;
+    controls.dampingFactor = 1.5;
+    camera.position = Pos;
+    camera.lookAt(Dir);
+
+    keyboardControls.enabled = false;
+    scene.add(keyboardControls.getObject());
+
+
+    //move this to the controls section, double check for duplica
+    var raycaster = new THREE.Raycaster();
+    var selectedObject = new THREE.Mesh();
+    selected_building = selectedObject.name;
+    var selectedObjectColor = new THREE.Color();
+    var selectedObjectScale;
+    var isSelected = false;
+
+    var windowWidth = window.innerWidth;
+    blockedWidth = windowWidth - 245;
+
+    function onDocumentMouseDown(event) {
+      switch (event.button) {
+        case 0: //left
+          var mouse = new THREE.Vector2;
+          mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+          mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+          if (event.clientX < blockedWidth) {
+            raycaster.setFromCamera(mouse, camera);
+
+            var intersects = raycaster.intersectObjects(scene.children, false);
+
+            if (intersects.length > 0) {
+              if ((intersects[0].object.name == "building") && (!isSelected)) {
+                selectedObject = intersects[0].object;
+                selectedObjectColor = selectedObject.material.color;
+                selectedObjectScale = selectedObject.scale.y;
+                selectedObject.material.color = new THREE.Color(1, 0.5, 0.5);
+                isSelected = true;
+                selectCheck();
+              }
+              if ((intersects[0].object.name != "building") && (isSelected)) {
+                selectedObject.material.color = selectedObjectColor;
+                var pos = intersects[0].point;
+                selectedObject.position.x = pos.x;
+                selectedObject.position.z = pos.z;
+                isSelected = false;
+              }
+            }
+          }
+          break;
+        case 1: //middle
+          break;
+        case 2: //right
+          var mouse = new THREE.Vector2;
+          mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+          mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+
+          selectedObject.material.color = selectedObjectColor;
+          isSelected = false;
+
+          break;
+      }
+    }
+
+    document.addEventListener('mousedown', onDocumentMouseDown, false);
+
+
+    //Lighting Settings
+    var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
+    var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
+    light.position.y = 1000;
+    light.position.x = 500;
+    light.position.z = 500;
+    light.target.position.set(0, 0, 0);
+    light.castShadow = true;
+    light.shadow.camera.left = -2000;
+    light.shadow.camera.right = 2000;
+    light.shadow.camera.top = 2000;
+    light.shadow.camera.bottom = -2000;
+    light.shadow.camera.far = 4000;
+    var helper = new THREE.CameraHelper(light.shadow.camera);
+
+
     //Skybox
-    var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-    var skyboxMaterials = [
-      new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./assets/skybox/hills_ft.png"),
-        side: THREE.DoubleSide
-      }),
-      new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./assets/skybox/hills_bk.png"),
-        side: THREE.DoubleSide
-      }),
-      new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./assets/skybox/hills_up.png"),
-        side: THREE.DoubleSide
-      }),
-      new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
-        side: THREE.DoubleSide
-      }),
-      new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./assets/skybox/hills_rt.png"),
-        side: THREE.DoubleSide
-      }),
-      new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load("./assets/skybox/hills_lt.png"),
-        side: THREE.DoubleSide
-      }),
+    var r1 = "./assets/skybox/1/";
+    var urls1 = [r1 + "FieryNebula_front5.jpg", r1 + "FieryNebula_back6.jpg",
+      r1 + "FieryNebula_top3.jpg", r1 + "FieryNebula_bottom4.jpg",
+      r1 + "FieryNebula_left2.jpg", r1 + "FieryNebula_right1.jpg"
     ];
+    var textureCube1 = new THREE.CubeTextureLoader().load(urls1);
 
-    // var skyboxMaterial = new THREE.MeshBasicMaterial(skyboxMaterials);
-    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterials);
+    var r2 = "./assets/skybox/2/";
+    var urls2 = [r2 + "px.jpg", r2 + "nx.jpg",
+      r2 + "py.jpg", r2 + "ny.jpg",
+      r2 + "pz.jpg", r2 + "nz.jpg"
+    ];
+    var textureCube2 = new THREE.CubeTextureLoader().load(urls2);
 
+    var r5 = "./assets/skybox/5/";
+    var urls5 = [r5 + "rt.png", r5 + "lt.png",
+      r5 + "up.png", r5 + "dn.png",
+      r5 + "bk.png", r5 + "ft.png"
+    ];
+    var textureCube5 = new THREE.CubeTextureLoader().load(urls5);
+    scene.background = textureCube5;
 
+    var r7 = "./assets/skybox/7/";
+    var urls7 = [r7 + "posx.jpg", r7 + "negx.jpg",
+      r7 + "posy.jpg", r7 + "negy.jpg",
+      r7 + "posz.jpg", r7 + "negz.jpg"
+    ];
+    var textureCube7 = new THREE.CubeTextureLoader().load(urls7);
 
+    var r8 = "./assets/skybox/8/";
+    var urls8 = [r8 + "px.jpg", r8 + "nx.jpg",
+      r8 + "py.jpg", r8 + "ny.jpg",
+      r8 + "pz.jpg", r8 + "nz.jpg"
+    ];
+    var textureCube8 = new THREE.CubeTextureLoader().load(urls8);
 
-    // generate the city!
+    var r9 = "./assets/skybox/9/";
+    var urls9 = [r9 + "posx.png", r9 + "negx.png",
+      r9 + "posy.png", r9 + "negy.png",
+      r9 + "posz.png", r9 + "negz.png"
+    ];
+    var textureCube9 = new THREE.CubeTextureLoader().load(urls9);
 
-    var baseGeometry = new THREE.PlaneGeometry(2000, 2000);
+    var TextureL1 = new THREE.TextureLoader().load("./assets/img-ground/hills_dn.png");
+    TextureL1.wrapS = TextureL1.wrapT = THREE.RepeatWrapping;
+    TextureL1.repeat.set(350, 350);
+
+    var TextureL2 = new THREE.TextureLoader().load("./assets/img-ground/1.jpg");
+    TextureL2.wrapS = TextureL2.wrapT = THREE.RepeatWrapping;
+    TextureL2.repeat.set(350, 350);
+
+    var TextureL3 = new THREE.TextureLoader().load("./assets/img-ground/2.jpg");
+    TextureL3.wrapS = TextureL3.wrapT = THREE.RepeatWrapping;
+    TextureL3.repeat.set(350, 350);
+
+    var TextureL4 = new THREE.TextureLoader().load("./assets/img-ground/3.jpg");
+    TextureL4.wrapS = TextureL4.wrapT = THREE.RepeatWrapping;
+    TextureL4.repeat.set(350, 350);
+
+    var TextureL5 = new THREE.TextureLoader().load("./assets/img-ground/4.jpg");
+    TextureL5.wrapS = TextureL5.wrapT = THREE.RepeatWrapping;
+    TextureL5.repeat.set(350, 350);
+
+    var TextureL6 = new THREE.TextureLoader().load("./assets/img-ground/5.jpg");
+    TextureL6.wrapS = TextureL6.wrapT = THREE.RepeatWrapping;
+    TextureL6.repeat.set(550, 550);
+
+    var TextureL7 = new THREE.TextureLoader().load("./assets/img-ground/6.jpg");
+    TextureL7.wrapS = TextureL7.wrapT = THREE.RepeatWrapping;
+    TextureL7.repeat.set(350, 350);
+
+    var TextureL8 = new THREE.TextureLoader().load("./assets/img-ground/7.jpg");
+    TextureL8.wrapS = TextureL8.wrapT = THREE.RepeatWrapping;
+    TextureL8.repeat.set(350, 350);
+
+    var TextureL9 = new THREE.TextureLoader().load("./assets/img-ground/8.jpg");
+    TextureL9.wrapS = TextureL9.wrapT = THREE.RepeatWrapping;
+    TextureL9.repeat.set(50, 50);
+
     var baseMaterial = new THREE.MeshPhongMaterial({
-      map: new THREE.TextureLoader().load("./assets/skybox/hills_dn.png"),
+      map: TextureL1,
+      // transparent: true,
+      //opacity: 0.8, //set the Transparency
       side: THREE.DoubleSide
     });
+
+    var baseGeometry = new THREE.PlaneGeometry(20000, 20000);
     var baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
     baseMesh.rotation.set(Math.PI / 2, 0, 0);
     baseMesh.receiveShadow = true;
     baseMesh.castShadow = false;
     scene.add(baseMesh);
 
+// Sun
+				var lensflare;
+				var light111;
+				var textureLoader = new THREE.TextureLoader();
+				var textureFlare0 = textureLoader.load( './assets/img/lensflare0.png' );
+				var textureFlare3 = textureLoader.load( './assets/img/lensflare3.png' );
+//				addLight( 0.55, 0.9, 0.5, 5000, 0, - 1000 );
+//				addLight( 0.08, 0.8, 0.5, 0, 0, - 1000 );
+				addLight(  0, 0, 0 , 500, 1500, -100 );
+				function addLight( h, s, l, x, y, z ) {
+					light111 = new THREE.PointLight( 0xffffff, 1.5, 2000 );
+					light111.color.setHSL( h, s, l );
+					light111.position.set( x, y, z );
+					scene.add( light111 );
+					lensflare = new THREE.Lensflare();
+					lensflare.addElement( new THREE.LensflareElement( textureFlare0, 700, 0, light111.color ) );
+					lensflare.addElement( new THREE.LensflareElement( textureFlare3, 60, 0.6 ) );
+					lensflare.addElement( new THREE.LensflareElement( textureFlare3, 70, 0.7 ) );
+					lensflare.addElement( new THREE.LensflareElement( textureFlare3, 120, 0.9 ) );
+					lensflare.addElement( new THREE.LensflareElement( textureFlare3, 70, 1 ) );
+					light111.add( lensflare );
+					lensflare.visible = false;
+				}
+
+var SWtrue = false;
+		function weather11(){
+			if( SWtrue == false ){
+					lensflare.visible = true;
+					light111.color.setHSL(0.995, 0.5, 0.9);
+					SWtrue = true;
+			}else{
+					lensflare.visible = false;
+					light111.color.setHSL( 0, 0, 0 );
+					SWtrue = false;
+			}
+		}
 
 
+//Cloud
+var Smogs1 = [];
+var SmogGeometry = new THREE.PlaneBufferGeometry( 120, 120 );
+var wuyun = new THREE.TextureLoader().load( "./assets/img/cloud2.png" );
+var tempMateria1 = new THREE.MeshBasicMaterial({map: wuyun, transparent: true, depthWrite:false, side:THREE.DoubleSide,opacity:0.96})
+    for ( var i = 0; i < 100; i++ ) {
+	    for ( var j = 0; j < 100; j++ ) {
+        	Smogs = new THREE.Mesh( SmogGeometry, tempMateria1 );
+		    	Smogs.position.set( 0 + Math.random()*4860 * Math.sin( i * 0.4 ),1800,0 + Math.random()*4860 * Math.cos( j * 0.25 ));
+					Smogs.scale.set(1,1,1);
+					Smogs.visible=false;
+		      scene.add( Smogs );
+		      Smogs1.push(Smogs)
+	    }
+	  }
+
+var SWtrue1 = false;
+		function weather22(){
+			if( SWtrue1 == false ){
+    		for( var i=0; i<Smogs1.length; i++ ){
+    			Smogs1[i].visible = true;
+    		}
+					SWtrue1 = true;
+			}else{
+    		for( var i=0; i<Smogs1.length; i++ ){
+    			Smogs1[i].visible = false;
+    		}
+					SWtrue1 = false;
+			}
+		}
+
+
+//raining
+var Smogs111 = [];
+var SmogGeometry11 = new THREE.PlaneBufferGeometry( 120, 120 );
+var wuyun11 = new THREE.TextureLoader().load( "./assets/img/rains.png" );
+var tempMateria11 = new THREE.MeshBasicMaterial({map: wuyun11, transparent: true, depthWrite:false, side:THREE.DoubleSide })
+    for ( var i = 0; i < 100; i++ ) {
+	    for ( var j = 0; j < 100; j++ ) {
+        	Smogs11 = new THREE.Mesh( SmogGeometry11, tempMateria11 );
+		    	Smogs11.position.set( 0 + Math.random()*4860 * Math.sin( i * 0.4 ),1800,0 + Math.random()*4860 * Math.cos( j * 0.25 ));
+					Smogs11.scale.set(1,1,1);
+					Smogs11.visible=false;
+		      scene.add( Smogs11 );
+		      Smogs111.push(Smogs11)
+	    }
+	  }
+
+	  ItRains();
+	  function ItRains(){
+		 requestAnimationFrame( ItRains );
+    		for( var i=0; i<Smogs111.length; i++ ){
+					  var ii = i+1;
+					  if( ii > 3 ){ ii = i/4; }
+					  Smogs111[i].position.y -= ii*0.05;
+						Smogs111[i].lookAt(camera.position);
+					  if( Smogs111[i].position.y < 0 ){
+							 Smogs111[i].position.y = 1800;
+	  				}
+				 }
+		 }
+
+var SWtrue2 = false;
+		function weather33(){
+			if( SWtrue2 == false ){
+    		for( var i=0; i<Smogs111.length; i++ ){
+    			Smogs111[i].visible = true;
+    		}
+					SWtrue2 = true;
+			}else{
+    		for( var i=0; i<Smogs111.length; i++ ){
+    			Smogs111[i].visible = false;
+    		}
+					SWtrue2 = false;
+			}
+		}
+
+
+    //Setup for road
     var roadSize = 20;
-
     var roadGeometry = new THREE.PlaneGeometry(roadSize, roadSize);
     var roadMaterial = new THREE.MeshPhongMaterial({
       map: new THREE.TextureLoader().load("./assets/road/asphalt.png"),
       side: THREE.DoubleSide
     });
 
-
+    //Setup for buildings and roads
+    var buildingLocations = [];
     var roadLocations = [];
 
+    //Amount of buildings to generate
+    var genSteps = 20;
+
+    var onKeyDown = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // forward
+        case 87: // w
+          moveForward = true;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = true;
+          break;
+
+        case 40: // backward
+        case 83: // s
+          moveBackward = true;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = true;
+          break;
+
+          // down
+        case 16: // shift
+          moveDown = true;
+          break;
+
+          // up
+        case 32: // space
+          moveUp = true;
+          break;
+      }
+
+    };
+
+    var onKeyUp = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // forward
+        case 87: // w
+          moveForward = false;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = false;
+          break;
+
+        case 40: // backward
+        case 83: // s
+          moveBackward = false;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = false;
+          break;
+
+          // down
+        case 16: // shift
+          moveDown = false;
+          break;
+
+          // up
+        case 32: // space
+          moveUp = false;
+          break;
+
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
+
+    function textureT(xxx) {
+      if (xxx == 1) {
+        baseMaterial.map = TextureL1;
+      } else if (xxx == 2) {
+        baseMaterial.map = TextureL2;
+      } else if (xxx == 3) {
+        baseMaterial.map = TextureL3;
+      } else if (xxx == 4) {
+        baseMaterial.map = TextureL4;
+      } else if (xxx == 5) {
+        baseMaterial.map = TextureL5;
+      } else if (xxx == 6) {
+        baseMaterial.map = TextureL6;
+      } else if (xxx == 7) {
+        baseMaterial.map = TextureL7;
+      } else if (xxx == 8) {
+        baseMaterial.map = TextureL8;
+      } else if (xxx == 9) {
+        baseMaterial.map = TextureL9;
+      }
+    }
+
     function AddSquareRoad(x, y, z) {
-
-
       var roadMesh = new THREE.Mesh(roadGeometry, roadMaterial);
       roadMesh.receiveShadow = true;
       roadMesh.castShadow = false;
@@ -144,7 +627,6 @@
     }
 
     function AddRoads(x, y, z, width) {
-
       var freeSpace = true;
 
       for (var b = 0; b < roadLocations.length; b++) {
@@ -154,11 +636,37 @@
       }
 
       if (freeSpace) {
-        console.log("road");
-
         roadLocations.push({
           x,
           z
+        });
+
+        var loader2 = new THREE.ObjectLoader();
+        loader2.load('./assets/lightpole/light-pole.json', function (obj) {
+
+          var combined = new THREE.Matrix4();
+
+          var scale = new THREE.Matrix4();
+          scale.makeScale(1, 1, 1);
+          combined.multiply(scale);
+
+          if (Math.round(Math.random()) == 0) {
+            var rot = new THREE.Matrix4();
+            rot.makeRotationY(Math.PI / 2);
+            combined.multiply(rot);
+          }
+
+          obj.applyMatrix(combined);
+
+          obj.mesh
+
+          obj.position.y = 12;
+          obj.position.x = x * roadSize + 12;
+          obj.position.z = z * roadSize + 12;
+
+
+          scene.add(obj);
+
         });
 
         for (var w = 0; w < width; w++) {
@@ -171,31 +679,12 @@
       }
     }
 
-    // function LayoutRoad(width, spacing, height) {
-    //   for (var j = -width; j < width; j++) {
-    //     AddSquareRoad(j * roadSize, height, width * roadSize);
-    //     if (j % spacing == 0) {
-    //       for (var k = -width; k < (width + 1); k++) { // +1 so we fill in the final corner
-    //         AddSquareRoad(width * roadSize, 1, k * roadSize);
-    //         if (k % spacing == 0 && k < width) { //k < width to let us get the corner
-    //           AddRoads(j, height, k, spacing);
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-    // this lays out a full grid over the full base
-    //LayoutRoad(40, 5, 3); 
-
-
-    var buildingLocations = [];
-
     function AddBuilding(startingX, startingZ, randomX, randomZ) {
       var buildingWidth = 1.5 + (Math.random() * 1);
       var buildingHeight = 1.2 + (Math.random() * 1.8);
 
       var buildingX = (startingX + randomX) * 20 * 5;
-      var buildingY = buildingHeight / 2
+      var buildingY = (buildingHeight / 2);
       var buildingZ = (startingZ + randomZ) * 20 * 5;
 
       var freeSpace = true;
@@ -212,9 +701,55 @@
           buildingZ
         });
 
+        var isWideRand = Math.floor(Math.random() * 30) + 1;
+
+        var wideBuildingWidth = 0;
+        var wideBuildingDepth = 0;
+
+        if (isWideRand < 5) {
+          var freeSpaceAdj = true;
+
+          for (var b = 0; b < buildingLocations.length; b++) {
+            if (buildingLocations[b].buildingX == buildingX + 100 && buildingLocations[b].buildingZ == buildingZ) {
+              freeSpaceAdj = false;
+            }
+          }
+
+          if (freeSpaceAdj) {
+            wideBuildingWidth = buildingWidth;
+            buildingX += 100;
+
+            buildingLocations.push({
+              buildingX,
+              buildingZ
+            });
+            buildingX -= 50;
+          }
+        } else if (isWideRand > 25) {
+          var freeSpaceAdj = true;
+
+          for (var b = 0; b < buildingLocations.length; b++) {
+            if (buildingLocations[b].buildingZ == buildingZ + 100 && buildingLocations[b].buildingX == buildingX) {
+              freeSpaceAdj = false;
+            }
+          }
+
+          if (freeSpaceAdj) {
+            wideBuildingDepth = buildingWidth;
+            buildingZ += 100;
+
+            buildingLocations.push({
+              buildingX,
+              buildingZ
+            });
+            buildingZ -= 50;
+          }
+        }
+
         var baseColor = 0.2 + (Math.random() * 0.8);
         AddBuild(Math.floor((Math.random() * 8) + 1), baseColor - (Math.random() / 10), baseColor - (Math.random() /
-            10), baseColor - (Math.random() / 10), buildingWidth, buildingHeight, buildingWidth, buildingX, buildingY,
+            10), baseColor - (Math.random() / 10), buildingWidth + wideBuildingWidth, buildingHeight,
+          buildingWidth + wideBuildingDepth, buildingX, buildingY,
           buildingZ);
       }
     }
@@ -230,7 +765,7 @@
         material.shininess = 100;
         geometry.computeVertexNormals();
         mesh = new THREE.Mesh(geometry, material);
-
+        mesh.name = "building";
 
         geometry.computeBoundingBox();
 
@@ -259,12 +794,8 @@
         mesh.position.z = zTra;
 
         scene.add(mesh);
-
       });
     }
-
-
-
 
     function RandomWalk(startingX, startingZ, stepsLeft, spacing) {
       var randomRoadCoords = [
@@ -277,7 +808,7 @@
       var newX = startingX + randomRoadCoords[0];
       var newZ = startingZ + randomRoadCoords[1];
 
-      AddRoads(newX * 5, 2, newZ * 5, 5);
+      AddRoads(newX * 5, 1, newZ * 5, 5);
 
 
       var randomBuildingCoords = [
@@ -302,60 +833,48 @@
       }
     }
 
-    var genSteps = 3;
-
-    GenerateCity(genSteps);
-
-
-    //create the webgl renderer
-    var renderer = new THREE.WebGLRenderer();
-
-    //set the size of the rendering window
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    //add the renderer to the current document
-    document.body.appendChild(renderer.domElement);
-
-    var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.3);
-    var light = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-    light.position.y = 1000;
-    light.position.x = 500;
-    light.position.z = 500;
-    light.target.position.set(0, 0, 0);
-    light.castShadow = true;
-    light.shadow.camera.left = -2000;
-    light.shadow.camera.right = 2000;
-    light.shadow.camera.top = 2000;
-    light.shadow.camera.bottom = -2000;
-    light.shadow.camera.far = 4000;
-    //var spotLightHelper = new THREE.SpotLightHelper( light );
-    var helper = new THREE.CameraHelper(light.shadow.camera);
-
-
     function CreateScene() {
       scene.add(ambientLight);
-      scene.add(skybox);
       scene.add(light);
-      // scene.add(helper);
     }
 
     CreateScene();
 
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.5;
-    controls.dampingFactor = 1.5;
-    camera.position = Pos;
-    camera.lookAt(Dir);
 
     //Generator Logic
-    var update = function () {
+    var update = function (moveSpeed) {
       controls.update();
+
+      var time = performance.now();
+      var delta = (time - prevTime) / 1000;
+
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+      velocity.y -= velocity.y * 10.0 * delta;
+
+      direction.z = Number(moveForward) - Number(moveBackward);
+      direction.x = Number(moveLeft) - Number(moveRight);
+      direction.y = Number(moveDown) - Number(moveUp);
+
+      direction.normalize();
+
+      if (moveForward || moveBackward) velocity.z -= direction.z * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
+      if (moveLeft || moveRight) velocity.x -= direction.x * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
+      if (moveUp || moveDown) velocity.y -= direction.y * moveSpeed * delta * 0.2;
+
+      keyboardControls.getObject().translateX(velocity.x * delta);
+      keyboardControls.getObject().translateZ(velocity.z * delta);
+      keyboardControls.getObject().translateY(velocity.y * delta);
+
+      prevTime = time;
     };
 
     var render = function () {
+
+    	for( var i=0; i<Smogs1.length; i++ ){
+				Smogs1[i].lookAt(camera.position);
+    	}
+
       //call the render with the scene and the camera
       renderer.render(scene, camera);
     }
@@ -368,15 +887,12 @@
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.render(scene, camera);
+      blockedWidth = width - 245;
     };
 
     //Runs the game loop
-    var GameLoop = function () {
-
-      update();
-      // console.log('run update loop');
-      // console.log(camera.position);
-      // console.log(camera.);
+    var GameLoop = function (moveSpeed) {
+      update(moveSpeed);
       render();
       requestAnimationFrame(GameLoop);
     }
@@ -385,31 +901,116 @@
     //link the resize of the window to the update of the camera
     window.addEventListener('resize', MyResize);
 
+
     var gui;
+    var params = {
+      selected_building: "empty",
+      light_angle: Math.PI / 2,
+      camera_rotate_speed: 0,
+      walk_path_steps: genSteps,
+
+      day: function () {
+        //Make day
+
+      },
+      night: function () {
+        //make night
+      },
+      firstPerson: function () {
+        camera.position.x = 0;
+        camera.position.y = 5;
+        camera.position.z = 0;
+        controls.target = new THREE.Vector3(10, 5, 0);
+        firstPersonMode = !firstPersonMode;
+        keyboardControls.enabled = !keyboardControls.enabled;
+      },
+
+      generate: function () {
+        GenerateCity(genSteps);
+      },
+      generate1: function () { //match the skybox
+        scene.background = textureCube1;
+      },
+      generate2: function () {
+        scene.background = textureCube2;
+      },
+      generate5: function () {
+        scene.background = textureCube5;
+      },
+      generate7: function () {
+        scene.background = textureCube7;
+      },
+      generate8: function () {
+        scene.background = textureCube8;
+      },
+      generate9: function () {
+        scene.background = textureCube9;
+      },
+
+      generate11: function () {
+        textureT(1); //match the ground
+      },
+      generate22: function () {
+        textureT(2);
+      },
+      generate33: function () {
+        textureT(3);
+      },
+      generate44: function () {
+        textureT(4);
+      },
+      generate55: function () {
+        textureT(5);
+      },
+      generate66: function () {
+        textureT(6);
+      },
+      generate77: function () {
+        textureT(7);
+      },
+      generate88: function () {
+        textureT(8);
+      },
+      generate99: function () {
+        textureT(9);
+      },
+      weather1: function () {
+        weather11();
+      },
+      weather2: function () {
+        weather22();
+      },
+      weather3: function () {
+        weather33();
+      },
+    }
 
     function buildGui() {
       gui = new dat.GUI({
         name: "City Options"
       });
-      var params = {
-        light_angle: Math.PI / 2,
-        camera_rotate_speed: 1.5,
-        walk_path_steps: 20,
-        generate: function () {
-          GenerateCity(genSteps);
-        }
-      }
+
+      selectCheck();
+
 
       var lightFolder = gui.addFolder('Light Options');
       lightFolder.open();
 
-      var lightController = lightFolder.add(params, 'light_angle', 0, Math.PI);
+      var lightController = lightFolder.add(params, 'light_angle', 0, Math.PI * 2);
       lightController.name("Angle");
       lightController.onChange(function (val) {
         light.position.y = Math.sin(val) * 1000;
         light.position.x = Math.cos(val) * 1000;
+        var lightVal = Math.abs(Math.sin(val));
+        light.color = new THREE.Color(1, lightVal, lightVal);
+        if (val >= Math.PI) {
+          light.intensity = 0;
+          ambientLight.intensity = 0.1;
+        } else {
+          light.intensity = 0.25 + 0.25 * lightVal;
+          ambientLight.intensity = 0.1 + 0.2 * lightVal;
+        }
       });
-
 
 
       var cameraFolder = gui.addFolder('Camera Options');
@@ -420,7 +1021,6 @@
       cameraSpeedController.onChange(function (val) {
         controls.autoRotateSpeed = val;
       });
-
 
 
       var generationFolder = gui.addFolder('Generation Options');
@@ -434,8 +1034,120 @@
 
       var genBtn = generationFolder.add(params, 'generate');
       genBtn.name("Generate New City!");
+
+      //Controller settings, for example whether or not to use first person controls
+      var controlsFolder = gui.addFolder('Control Options');
+      controlsFolder.open();
+      var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
+      ctrlBtnFP.name("First Person Mode");
+      // var ctrlBtnDay = controlsFolder.add(params, 'day');
+      // ctrlBtnDay.name("Set time day");
+      // var ctrlBtnNight = controlsFolder.add(params, 'night');
+      // ctrlBtnNight.name("Set time night");
+
+
+      //Skybox
+      var generationFolder1 = gui.addFolder('Skybox');
+      generationFolder1.close();
+
+      var genBtn1 = generationFolder1.add(params, 'generate1');
+      genBtn1.name("Sky1");
+
+      var genBtn2 = generationFolder1.add(params, 'generate2');
+      genBtn2.name("Sky2");
+
+      var genBtn5 = generationFolder1.add(params, 'generate5');
+      genBtn5.name("Sky3");
+
+      var genBtn7 = generationFolder1.add(params, 'generate7');
+      genBtn7.name("Sky4");
+
+      var genBtn8 = generationFolder1.add(params, 'generate8');
+      genBtn8.name("Sky5");
+
+      var genBtn9 = generationFolder1.add(params, 'generate9');
+      genBtn9.name("Sky6");
+
+
+      //ground
+      var generationFolder11 = gui.addFolder('Ground Texture');
+      generationFolder11.close();
+
+      var genBtn11 = generationFolder11.add(params, 'generate11');
+      genBtn11.name("Ground1");
+
+      var genBtn22 = generationFolder11.add(params, 'generate22');
+      genBtn22.name("Ground2");
+
+      var genBtn33 = generationFolder11.add(params, 'generate33');
+      genBtn33.name("Ground3");
+
+      var genBtn44 = generationFolder11.add(params, 'generate44');
+      genBtn44.name("Ground4");
+
+      var genBtn55 = generationFolder11.add(params, 'generate55');
+      genBtn55.name("Ground5");
+
+      var genBtn66 = generationFolder11.add(params, 'generate66');
+      genBtn66.name("Ground6");
+
+      var genBtn77 = generationFolder11.add(params, 'generate77');
+      genBtn77.name("Ground7");
+
+      var genBtn88 = generationFolder11.add(params, 'generate88');
+      genBtn88.name("Ground8");
+
+      var genBtn99 = generationFolder11.add(params, 'generate99');
+      genBtn99.name("Ground9");
+
+
+      //weather
+       var generationFolder111 = gui.addFolder('Weather');
+      generationFolder111.close();
+
+      var genBtn111 = generationFolder111.add(params, 'weather1');
+      genBtn111.name("sun");
+
+			// cloud
+      var genBtn222 = generationFolder111.add(params, 'weather2');
+      genBtn222.name("cloud");
+
+ 			// raining
+      var genBtn333 = generationFolder111.add(params, 'weather3');
+      genBtn333.name("rain");
+
+
+
+
     }
 
+    function selectCheck() {
+      if (isSelected == true) {
+        var buildingFolder = gui.addFolder('Building Options');
+        buildingFolder.open();
+
+        var files = [1, 2, 3, 4, 5, 6, 7, 8];
+
+        var buildingController = buildingFolder.add(params, 'selected_building', ['Model 1', 'Model 2', 'Model 3',
+          'Model 4', 'Model 5', 'Model 6', 'Model 7', 'Model 8'
+        ]).listen();
+        buildingController.name("Building Model");
+
+        var paramcolor = {
+          color: 0xff00ff
+        };
+        var paramscale = {
+          scale: selectedObjectScale
+        };
+
+        buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
+          selectedObjectColor.set(paramcolor.color);
+        });
+        buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
+          selectedObject.scale.y = paramscale.scale;
+        });
+      }
+    }
     buildGui();
   </script>
 </body>
