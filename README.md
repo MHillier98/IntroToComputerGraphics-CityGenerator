@@ -8,10 +8,8 @@ This city generator was built in [three.js](https://threejs.org/) to explore dif
 
 Our project’s aim was to randomly generate a cityscape with a wide range of different variables that effect it’s generation. We wanted variation through building sizes, colours and different models, as well as other aesthetics that would affect our scene, such as lighting, camera positioning, and skybox scenery. We wanted to provide many different options to the user to control these options, allowing the user to edit the city after it has been generated.
 
----
-
-## Demonstration Video
-A short overview video of our project is available on Youtube: https://www.youtube.com/watch?v=k7xkfOuArYo
+### Demonstration Video
+A short overview video of our project is available on [Youtube](https://www.youtube.com/watch?v=k7xkfOuArYo).
 
 ---
 
@@ -45,6 +43,6 @@ Then go to one of the available addresses to view and use the city builder (thes
 ## [Group members - Group 10](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/graphs/contributors)
 * Matthew Hillier - 'MHillier98'
 * Alex Munoz - 'rtxd'
-* Josh Masangcay - 'JoshMas' + 'Animator1'
+* Josh Masangcay - 'JoshMas' / 'Animator1'
 * Mitchell Sanderson - 'Titan32a'
 * Longyong Li - 'lilongyong333'
