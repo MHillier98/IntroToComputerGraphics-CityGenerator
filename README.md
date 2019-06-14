@@ -40,6 +40,29 @@ Then go to one of the available addresses to view and use the city builder (thes
 
 ---
 
+## Controls
+
+### Camera Controls
+* Left Click + Drag to Rotate
+* Right Click + Drag to Pan
+* Scroll Wheel to Zoom
+* Space to move up
+* Left shift to move down
+
+### First Person Mode Controls
+* Move mouse to rotate
+* W to move forwards
+* A to move left
+* S to move backwards
+* D to move right
+
+### Building Controls
+* Left Click to select
+* Right Click to de-select
+* Left Click again to move the building
+
+---
+
 ## [Group members - Group 10](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/graphs/contributors)
 * Matthew Hillier - 'MHillier98'
 * Alex Munoz - 'rtxd'

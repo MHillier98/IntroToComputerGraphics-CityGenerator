@@ -56,7 +56,6 @@ function onDocumentMouseDown(event) {
                         isSelected = false;
 
                         if (buildingFolder !== null) {
-                            buildingFolder.remove(buildingController);
                             buildingFolder.remove(colourPicker);
                             buildingFolder.remove(scalePicker);
                         }
@@ -77,7 +76,6 @@ function onDocumentMouseDown(event) {
                 isSelected = false;
 
                 if (buildingFolder !== null) {
-                    buildingFolder.remove(buildingController);
                     buildingFolder.remove(colourPicker);
                     buildingFolder.remove(scalePicker);
                 }

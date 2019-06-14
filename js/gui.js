@@ -226,17 +226,11 @@ genBtn99.name("Ground9");
 var buildingFolder = gui.addFolder('Building Options');
 buildingFolder.open();
 
-var buildingController;
 var colourPicker;
 var scalePicker;
 
 function selectCheck() {
     if (isSelected == true) {
-        var files = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-        buildingController = buildingFolder.add(params, 'selected_building', ['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5', 'Model 6', 'Model 7', 'Model 8', 'Model 9', 'Model 10', 'Model 11', 'Model 12', 'Model 13', 'Model 14', 'Model 15']).listen();
-        buildingController.name("Building Model"); // this is still pretty broken
-
         var paramcolor = {
             color: selectedObjectColor
         };

@@ -142,7 +142,7 @@ baseMesh.receiveShadow = true;
 baseMesh.castShadow = false;
 scene.add(baseMesh);
 
-document.getElementById("info-btn").addEventListener("click", function () {
+document.getElementById("info-panel").addEventListener("click", function () {
     var infoBtn = document.getElementById("info-btn");
     var infoContent = document.getElementById("info-content");
     if (infoContent.style.display === "none") {
