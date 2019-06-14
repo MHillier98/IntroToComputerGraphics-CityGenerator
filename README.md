@@ -37,9 +37,9 @@ Then go to one of the available addresses to view and use the city builder (thes
 
 ---
 
-## Group members - Group 10
-* Matthew Hillier
-* Alex Munoz
-* Josh Masangcay
-* Mitchell Sanderson
-* Longyong Li
+## [Group members - Group 10](https://github.com/MHillier98/IntroToComputerGraphics_CityGenerator/graphs/contributors)
+* Matthew Hillier - 'MHillier98'
+* Alex Munoz - 'rtxd'
+* Josh Masangcay - 'JoshMas' + 'Animator1'
+* Mitchell Sanderson - 'Titan32a'
+* Longyong Li - 'lilongyong333'
