@@ -13,10 +13,23 @@ var params = {
         //make night
     },
     firstPerson: function () {
+        controls.reset();
         camera.position.x = 0;
-        camera.position.y = 5;
-        camera.position.z = 0;
-        controls.target = new THREE.Vector3(10, 5, 0);
+        camera.position.y = 4;
+        camera.position.z = 13;
+
+        camera.rotation.y = 90 * Math.PI / 180;
+        // camera.rotation.x = 90 * Math.PI / 180;
+        // camera.rotation.z = 90 * Math.PI / 180;
+
+        // camera.up.set(0, 0, 1);
+        // camera.lookAt(100, 100, 100);
+        // camera.target.position.y = 12
+        keyboardControls.getObject().position.set(0, 4, 13);
+        // controls = new THREE.PointerLockControls(camera);
+        controls.update();
+        camera.updateProjectionMatrix();
+
         firstPersonMode = !firstPersonMode;
         keyboardControls.enabled = !keyboardControls.enabled;
     },
@@ -139,11 +152,10 @@ var genBtn = generationFolder.add(params, 'generate');
 genBtn.name("Generate New City");
 
 //Controller settings, for example whether or not to use first person controls
-// TODO: FIX THIS!
-//var controlsFolder = gui.addFolder('Control Options');
-//controlsFolder.open();
-//var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
-//ctrlBtnFP.name("First Person Mode");
+var controlsFolder = gui.addFolder('Control Options');
+controlsFolder.open();
+var ctrlBtnFP = controlsFolder.add(params, 'firstPerson');
+ctrlBtnFP.name("First Person Mode");
 // var ctrlBtnDay = controlsFolder.add(params, 'day');
 // ctrlBtnDay.name("Set time day");
 // var ctrlBtnNight = controlsFolder.add(params, 'night');

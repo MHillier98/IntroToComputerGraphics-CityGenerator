@@ -5,12 +5,16 @@ function CreateScene() {
 
 CreateScene();
 
+var moveSpeed = 4000;
+
+
 //Generator Logic
-var update = function (moveSpeed) {
+var update = function () {
     controls.update();
 
     var time = performance.now();
     var delta = (time - prevTime) / 1000;
+    // var delta = 1;
 
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.z -= velocity.z * 10.0 * delta;
@@ -22,14 +26,22 @@ var update = function (moveSpeed) {
 
     direction.normalize();
 
+    // console.log('delta', delta);
     if (moveForward || moveBackward) {
         velocity.z -= direction.z * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
+        console.log('velocity.z :', velocity.z);
+        // console.log('direction.z :', direction.z);
     }
     if (moveLeft || moveRight) {
         velocity.x -= direction.x * moveSpeed * delta * (firstPersonMode ? 0.2 : 0.6);
+        console.log('velocity.x :', velocity.x);
+        // console.log('direction.x :', direction.x);
+
     }
     if (moveUp || moveDown) {
         velocity.y -= direction.y * moveSpeed * delta * 0.2;
+        console.log('velocity.y :', velocity.y);
+        // console.log('direction.y :', direction.y);
     }
 
     keyboardControls.getObject().translateX(velocity.x * delta);
@@ -56,8 +68,8 @@ var MyResize = function () {
 };
 
 //Runs the game loop
-var GameLoop = function (moveSpeed) {
-    update(moveSpeed);
+var GameLoop = function () {
+    update();
     render();
     requestAnimationFrame(GameLoop);
 }
