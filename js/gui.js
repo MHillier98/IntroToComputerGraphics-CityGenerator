@@ -205,29 +205,39 @@ var genBtn99 = generationFolder11.add(params, 'generate99');
 genBtn99.name("Ground9");
 
 
+var buildingFolder = gui.addFolder('Building Options');
+buildingFolder.open();
+
+var buildingController;
+var colourPicker;
+var scalePicker;
+
 function selectCheck() {
     if (isSelected == true) {
-        var buildingFolder = gui.addFolder('Building Options');
-        buildingFolder.open();
+        var files = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
-        var files = [1, 2, 3, 4, 5, 6, 7, 8];
-
-        var buildingController = buildingFolder.add(params, 'selected_building', ['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5', 'Model 6', 'Model 7', 'Model 8']).listen();
-        buildingController.name("Building Model");
+        buildingController = buildingFolder.add(params, 'selected_building', ['Model 1', 'Model 2', 'Model 3', 'Model 4', 'Model 5', 'Model 6', 'Model 7', 'Model 8', 'Model 9', 'Model 10', 'Model 11', 'Model 12', 'Model 13', 'Model 14', 'Model 15']).listen();
+        buildingController.name("Building Model"); // this is still pretty broken
 
         var paramcolor = {
-            color: 0xff00ff
+            color: selectedObjectColor
         };
         var paramscale = {
             scale: selectedObjectScale
         };
 
-        buildingFolder.addColor(paramcolor, 'color').name('Building Colour').onChange(function () {
-            selectedObjectColor.set(paramcolor.color);
+        colourPicker = buildingFolder.addColor(paramcolor, 'color').onChange(function () {
+            selectedObject.material.color = paramcolor.color;
+            selectedObjectColor = [paramcolor.color[0], paramcolor.color[1], paramcolor.color[2]];
+            selectedObject.material.color = new THREE.Color(selectedObjectColor[0] / 255, selectedObjectColor[1] / 255, selectedObjectColor[2] / 255);
+
         });
-        buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
+        colourPicker.name('Building Colour');
+
+        scalePicker = buildingFolder.add(paramscale, 'scale', 0, 100).onChange(function () {
             selectedObject.scale.y = paramscale.scale;
         });
+        scalePicker.name("Building Height Scale");
     }
 }
 

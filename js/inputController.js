@@ -35,9 +35,15 @@ function onDocumentMouseDown(event) {
                 if (intersects.length > 0) {
                     if ((intersects[0].object.name == "building") && (!isSelected)) {
                         selectedObject = intersects[0].object;
-                        selectedObjectColor = selectedObject.material.color;
+
+                        if (selectedObject.material.color[0] === NaN) {
+                            selectedObjectColor = [255, 255, 255];
+                        } else {
+                            selectedObjectColor = [selectedObject.material.color.r * 255, selectedObject.material.color.g * 255, selectedObject.material.color.b * 255];
+                        }
+
                         selectedObjectScale = selectedObject.scale.y;
-                        selectedObject.material.color = new THREE.Color(1, 0.5, 0.5);
+                        // selectedObject.material.color = new THREE.Color(1, 0.5, 0.5); // replace this with a highlight?
                         isSelected = true;
                         selectCheck();
                     }
@@ -58,9 +64,17 @@ function onDocumentMouseDown(event) {
             mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
             mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
 
-            selectedObject.material.color = selectedObjectColor;
-            isSelected = false;
+            // selectedObject.material.color = new THREE.Color(selectedObjectColor[0] / 255, selectedObjectColor[1] / 255, selectedObjectColor[2] / 255);
 
+            if (isSelected) {
+                isSelected = false;
+
+                if (buildingFolder !== null) {
+                    buildingFolder.remove(buildingController);
+                    buildingFolder.remove(colourPicker);
+                    buildingFolder.remove(scalePicker);
+                }
+            }
             break;
     }
 }
