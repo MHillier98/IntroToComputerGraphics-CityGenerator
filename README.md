@@ -1,4 +1,4 @@
-# [UTS 31264 Introduction To Computer Graphics](http://handbook.uts.edu.au/subjects/31264.html) - Final Project
+# [UTS 31264 Introduction to Computer Graphics](http://handbook.uts.edu.au/subjects/31264.html) - Final Project
 
 Currently being hosted at: https://mhillier98.github.io/IntroToComputerGraphics_CityGenerator/
 
